@@ -516,3 +516,34 @@
   outline: 2px solid var(--color-gold);
   outline-offset: 6px;
 }
+
+.signup-message {
+  margin: 1rem 0 0;
+  color: var(--color-gold);
+  font-size: 0.95rem;
+}
+
+.signup .signup-consent {
+  grid-column: 2;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.signup .signup-consent input {
+  margin-top: 0.3rem;
+  accent-color: var(--color-gold);
+}
+
+.signup .signup-message {
+  grid-column: 2;
+}
+
+@media (max-width: 900px) {
+  .signup .signup-message,
+  .signup .signup-consent {
+    grid-column: 1;
+  }
+}
