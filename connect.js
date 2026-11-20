@@ -1,8 +1,8 @@
 const CAL_LINKS = {
-  tour:    "https://cal.com/meet-tha-founder/chat-with-lucia",
-  house:   "https://cal.com/house-stables-of-melbourne/hire-the-house",
-  stables: "https://cal.com/stables-melbs/hire-the-stables",
-  garden:  "https://cal.com/garden-stablesofmelbs/hire-the-garden"
+  tour:    "",
+  house:   "",
+  stables: "",
+  garden:  ""
 };
 
 const CALENDLY_COLOURS = "background_color=2a292b&text_color=f4f0e9&primary_color=d9a441";
