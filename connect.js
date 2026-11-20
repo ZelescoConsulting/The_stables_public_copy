@@ -3,6 +3,7 @@ const CAL_LINKS = {
   house:   "https://cal.com/house-stables-of-melbourne/hire-the-house",
   stables: "https://cal.com/stables-melbs/hire-the-stables",
   garden:  "https://cal.com/garden-stablesofmelbs/hire-the-garden"
+};
 
 const BOOKING_STYLE = "own";
 
