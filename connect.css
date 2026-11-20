@@ -360,6 +360,14 @@
   gap: 0 1.25rem;
 }
 
+.booker-loading {
+  min-height: 20rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.75;
+}
+
 .booker.is-live {
   padding: 0;
   border: none;

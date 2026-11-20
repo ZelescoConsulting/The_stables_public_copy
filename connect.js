@@ -3,7 +3,8 @@ const CAL_LINKS = {
   house:   "https://cal.com/house-stables-of-melbourne/hire-the-house",
   stables: "https://cal.com/stables-melbs/hire-the-stables",
   garden:  "https://cal.com/garden-stablesofmelbs/hire-the-garden"
-};
+
+const BOOKING_STYLE = "own";
 
 const CALENDLY_COLOURS = "background_color=2a292b&text_color=f4f0e9&primary_color=d9a441";
 
@@ -124,16 +125,22 @@ if (enquiryForm) {
       return;
     }
 
+    const sendButton = enquiryForm.querySelector("[type=submit]");
+    sendButton.disabled = true;
     fetch(enquiryForm.action, {
       method: "POST",
       body: new FormData(enquiryForm),
       headers: { "Accept": "application/json" }
     })
       .then(function (response) {
-        if (response.ok) showEnquiryThanks();
-        else errorMessage.hidden = false;
+        return response.json().catch(function () { return {}; }).then(function (result) {
+          sendButton.disabled = false;
+          if (response.ok && result.success !== false) showEnquiryThanks();
+          else errorMessage.hidden = false;
+        });
       })
       .catch(function () {
+        sendButton.disabled = false;
         errorMessage.hidden = false;
       });
   });
@@ -183,7 +190,13 @@ function scramble(text) {
   return number;
 }
 
-function makeBooker(box) {
+function esc(text) {
+  return String(text == null ? "" : text)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function makeBooker(box, cal) {
 
   const id = box.dataset.demo;
   const name = box.dataset.name;
@@ -207,6 +220,55 @@ function makeBooker(box) {
   let chosenDay = null;
   let chosenStart = null;
 
+  const slots = {};
+  let loading = false;
+
+  function monthKey() {
+    return length + "|" + viewMonth.getFullYear() + "-" + pad(viewMonth.getMonth() + 1);
+  }
+
+  function loadMonth() {
+    const key = monthKey();
+    if (slots[key] || loading) return;
+    loading = true;
+
+    const monthStart = new Date(viewMonth.getFullYear(), viewMonth.getMonth(), 1);
+    const monthEnd = new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 0);
+    const from = monthStart < firstDay ? firstDay : monthStart;
+    const to = monthEnd > lastDay ? lastDay : monthEnd;
+
+    const url = "https://api.cal.com/v2/slots" +
+      "?username=" + encodeURIComponent(cal.username) +
+      "&eventTypeSlug=" + encodeURIComponent(cal.slug) +
+      "&start=" + dateKey(from) + "&end=" + dateKey(to) +
+      "&timeZone=Australia/Melbourne" +
+      (lengths.length > 1 ? "&duration=" + length : "");
+
+    fetch(url, { headers: { "cal-api-version": "2024-09-04" } })
+      .then(function (response) {
+        if (!response.ok) throw new Error("Cal.com answered " + response.status);
+        return response.json();
+      })
+      .then(function (result) {
+        const days = {};
+        Object.keys(result.data || {}).forEach(function (day) {
+          days[day] = {};
+          result.data[day].forEach(function (slot) {
+
+            days[day][toMinutes(slot.start.slice(11, 16))] = slot.start;
+          });
+        });
+        slots[key] = days;
+        loading = false;
+        render();
+      })
+      .catch(function (error) {
+        console.warn("Cal.com free times not loaded:", error);
+        loading = false;
+        cal.onFail();
+      });
+  }
+
   const bookings = {};
 
   function bookingsFor(key) {
@@ -229,6 +291,10 @@ function makeBooker(box) {
   }
 
   function freeTimes(day) {
+    if (cal) {
+      const month = slots[monthKey()] || {};
+      return Object.keys(month[dateKey(day)] || {}).map(Number).sort(function (a, b) { return a - b; });
+    }
     const taken = bookingsFor(dateKey(day));
     const times = [];
     for (let start = open; start + length <= close; start += step) {
@@ -242,6 +308,11 @@ function makeBooker(box) {
   }
 
   function render() {
+    if (cal && !slots[monthKey()]) {
+      box.innerHTML = '<p class="booker-loading" role="status">Checking which times are free&hellip;</p>';
+      loadMonth();
+      return;
+    }
     box.innerHTML = "";
 
     const top = document.createElement("div");
@@ -436,11 +507,58 @@ function makeBooker(box) {
 
     box.querySelector("[data-back]").addEventListener("click", render);
 
-    box.querySelector("form").addEventListener("submit", function (event) {
+    const form = box.querySelector("form");
+    form.addEventListener("submit", function (event) {
       event.preventDefault();
 
-      bookingsFor(dateKey(chosenDay)).push([chosenStart, end]);
-      renderDone(summary);
+      if (!cal) {
+        bookingsFor(dateKey(chosenDay)).push([chosenStart, end]);
+        renderDone(summary);
+        return;
+      }
+
+      const button = form.querySelector("[type=submit]");
+      button.disabled = true;
+      button.textContent = "Sending...";
+      const iso = slots[monthKey()][dateKey(chosenDay)][chosenStart];
+      const booking = {
+        start: new Date(iso).toISOString(),
+        username: cal.username,
+        eventTypeSlug: cal.slug,
+        attendee: {
+          name: form.elements.name.value,
+          email: form.elements.email.value,
+          timeZone: "Australia/Melbourne",
+          language: "en"
+        },
+        bookingFieldsResponses: { notes: form.elements.notes.value }
+      };
+      if (lengths.length > 1) booking.lengthInMinutes = length;
+
+      fetch("https://api.cal.com/v2/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "cal-api-version": "2024-08-13" },
+        body: JSON.stringify(booking)
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Cal.com answered " + response.status);
+          delete slots[monthKey()];
+          renderDone(summary);
+        })
+        .catch(function (error) {
+          console.warn("Booking not sent:", error);
+          button.disabled = false;
+          button.innerHTML = needsApproval ? "Send request &rarr;" : "Book tour &rarr;";
+          let problem = form.querySelector(".form-error");
+          if (!problem) {
+            problem = document.createElement("p");
+            problem.className = "form-error";
+            form.appendChild(problem);
+          }
+          problem.innerHTML = "Sorry, that didn't go through. That time may have just been taken. " +
+            'Please try another time, or <a href="https://cal.com/' + esc(cal.username + "/" + cal.slug) +
+            '" target="_blank" rel="noopener">book on our Cal.com page</a>.';
+        });
     });
 
     box.querySelector("input").focus();
@@ -454,6 +572,7 @@ function makeBooker(box) {
         "<p>" + (needsApproval
           ? "Lucia will check the details and email you to confirm. The time is held for you until then. No payment is taken now."
           : "A confirmation is on its way to your inbox. We look forward to showing you around.") + "</p>" +
+        (cal ? '<p class="connect-small">Check your inbox (and spam folder) for an email from Cal.com with the details.</p>' : "") +
         '<div class="booker-actions">' +
           '<button class="button button-light" type="button" data-again>Make another booking</button>' +
         "</div>" +
@@ -525,7 +644,24 @@ document.querySelectorAll(".booker[data-demo]").forEach(function (box) {
   if (!/calendly\.com/.test(link)) {
     link = link.replace(/^https?:\/\/(app\.)?cal\.com\//, "");
   }
-  if (link) {
+  if (link && BOOKING_STYLE === "own" && !/calendly\.com/.test(link)) {
+
+    CAL_LINKS[box.dataset.demo] = link;
+    const parts = link.split("?")[0].split("/");
+    box.classList.add("is-connected");
+    makeBooker(box, {
+      username: parts[0],
+      slug: parts[1],
+      onFail: function () {
+
+        box.classList.remove("is-connected");
+        box.classList.add("is-live");
+        box.innerHTML = "";
+        startCalendars();
+      }
+    });
+  } else if (link) {
+
     CAL_LINKS[box.dataset.demo] = link;
     box.classList.add("is-live");
     box.innerHTML = "";
@@ -534,7 +670,7 @@ document.querySelectorAll(".booker[data-demo]").forEach(function (box) {
   }
 });
 
-const stillPreview = document.querySelectorAll(".booker:not(.is-live), form[data-demo='true']").length;
+const stillPreview = document.querySelectorAll(".booker:not(.is-live):not(.is-connected), form[data-demo='true']").length;
 const previewNotice = document.querySelector(".preview-notice");
 if (previewNotice && stillPreview === 0) previewNotice.hidden = true;
 

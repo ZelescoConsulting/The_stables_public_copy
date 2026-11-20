@@ -237,9 +237,10 @@
         </div>
 
         <form class="enquiry-form" id="enquiry-form"
-              data-demo="true"
-              action="https://formspree.io/f/YOUR_FORM_ID"
+              action="https://api.web3forms.com/submit"
               method="POST">
+
+          <input type="hidden" name="access_key" value="49feecc4-34a0-4e89-b863-52c8a7f23855">
 
           <div class="field-row">
             <label class="field">
@@ -276,9 +277,10 @@
             <textarea name="message" rows="5" required></textarea>
           </label>
 
-          <input type="text" name="_gotcha" class="visually-hidden" tabindex="-1" autocomplete="off">
+          <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off">
 
-          <input type="hidden" name="_subject" value="New enquiry from The Stables website">
+          <input type="hidden" name="subject" value="New enquiry from The Stables website">
+          <input type="hidden" name="from_name" value="The Stables website">
 
           <p class="connect-small form-privacy">
             We'll only use your details to reply. See our <a href="privacy.html">Privacy Policy</a>.
