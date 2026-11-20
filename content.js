@@ -37,6 +37,13 @@ function imgTag(src, width, alt, extra) {
     (extra || "") + ">";
 }
 
+function setPhoto(img, src, width, alt) {
+  if (!img || !src) return;
+  img.dataset.original = /^https?:\/\//.test(src) ? src : src.replace(/^\/+/, "");
+  img.src = photoUrl(src, width);
+  if (alt !== undefined) img.alt = alt || "";
+}
+
 document.addEventListener("error", function (event) {
   const img = event.target;
   if (img.tagName !== "IMG" || !img.dataset.original) return;
@@ -107,6 +114,27 @@ function load(name) {
   return fetch(CONTENT_FOLDER + name + ".json", { cache: "no-cache" })
     .then(function (response) { return response.ok ? response.json() : null; })
     .catch(function () { return null; });
+}
+
+function fillHomePhotos(home) {
+  if (!home) return;
+
+  const video = document.querySelector(".hero video");
+  if (video) {
+    if (home.opening_photo) video.poster = photoUrl(home.opening_photo, 1920);
+    if (home.play_video === false) {
+      video.querySelectorAll("source").forEach(function (s) { s.remove(); });
+      video.removeAttribute("autoplay");
+      video.load();
+    }
+  }
+
+  const collage = document.querySelectorAll(".collage-photos img");
+  (home.collage || []).forEach(function (item, n) {
+    if (item && collage[n]) setPhoto(collage[n], item.photo, 1000, item.photo_description);
+  });
+
+  setPhoto(document.querySelector(".closing-bg"), home.closing_photo, 1920, "");
 }
 
 function fillHomeEvents(events) {
@@ -324,6 +352,7 @@ function fillStories(stories) {
   const thenLoad = ((thisScript && thisScript.dataset.then) || "").split(/\s+/).filter(Boolean);
 
   const needs = {
+    home: !!document.querySelector(".hero"),
     events: !!document.querySelector(".next-event, .event-list"),
     albums: !!document.querySelector(".album-grid"),
     gallery: !!document.querySelector(".project-grid"),
@@ -338,6 +367,7 @@ function fillStories(stories) {
     names.forEach(function (n, i) { data[n] = results[i]; });
 
     [
+      function () { fillHomePhotos(data.home); },
       function () { fillHomeEvents(data.events); },
       function () { fillHomeSpaces(data.spaces); },
       function () { fillEventList(data.events); },

@@ -1,0 +1,460 @@
+# ================================================================
+# PAGES CMS SETTINGS  (.pages.yml)
+# ----------------------------------------------------------------
+# This file tells Pages CMS what the founder can edit, and how each
+# form should look. Pages CMS reads it from the top of the GitHub
+# repository. The founder never sees this file.
+#
+# Each "content" item becomes one entry in her left-hand menu.
+# Each "field" becomes one box in the form.
+#   label        the name she sees
+#   description  the small help text under the box
+# ================================================================
+
+# Where uploaded photos are saved, and which kinds are allowed
+media:
+  - name: photos
+    label: Photos
+    input: images/uploads
+    output: /images/uploads
+    extensions: [jpg, jpeg, png, webp]
+    rename: safe
+
+
+content:
+
+  # ----------------------------------------------------------------
+  # HOMEPAGE PHOTOS: the opening image, the four collage photos and
+  # the closing photo band. (The spaces and events on the homepage
+  # come from "Spaces and prices" and "Upcoming events".)
+  # ----------------------------------------------------------------
+  - name: home
+    label: Homepage photos
+    type: file
+    path: content/home.json
+    format: json
+    fields:
+      - name: opening_photo
+        label: Opening photo
+        type: image
+        description: The big photo at the very top. It shows while the video loads, or on its own if the video is switched off. A wide (landscape) photo works best.
+        options:
+          media: photos
+      - name: play_video
+        label: Play the video
+        type: boolean
+        default: true
+        description: Untick to show the opening photo instead of the video.
+      - name: collage
+        label: Collage photos (the four under the opening)
+        type: object
+        description: "In order: top left (tall), bottom left (wide), top right (wide), bottom right (tall)."
+        list:
+          min: 4
+          max: 4
+          collapsible:
+            collapsed: true
+            summary: "Photo {index}"
+        fields:
+          - name: photo
+            label: Photo
+            type: image
+            options:
+              media: photos
+          - name: photo_description
+            label: Describe the photo in a few words
+            type: string
+      - name: closing_photo
+        label: Closing photo
+        type: image
+        description: The wide photo behind the "Join our creative community" sign-up, near the bottom.
+        options:
+          media: photos
+
+  # ----------------------------------------------------------------
+  # EVENTS: shown on the homepage ("Next at The Stables") and the
+  # Events page. Events disappear by themselves once their date
+  # has passed.
+  # ----------------------------------------------------------------
+  - name: events
+    label: Upcoming events
+    type: file
+    path: content/events.json
+    format: json
+    list:
+      collapsible:
+        collapsed: true
+        summary: "{title} ({date})"
+    fields:
+      - name: title
+        label: Event name
+        type: string
+        required: true
+      - name: date
+        label: Date
+        type: date
+        required: true
+        description: Events disappear from the website by themselves after this date.
+        options:
+          format: yyyy-MM-dd
+      - name: time
+        label: Time
+        type: string
+        description: "For example: 10am–4pm"
+      - name: where
+        label: Where
+        type: string
+        description: "For example: The House, The Garden or All spaces"
+      - name: cost
+        label: Cost
+        type: string
+        description: "For example: $45, or Free"
+      - name: host
+        label: Hosted by
+        type: string
+        description: The photographer or host's name (optional).
+      - name: description
+        label: About the event
+        type: text
+        description: Two or three sentences. What happens, who it's for, what to bring.
+      - name: photo
+        label: Photo
+        type: image
+        options:
+          media: photos
+      - name: photo_description
+        label: Describe the photo in a few words
+        type: string
+        description: "Read aloud to people who can't see the photo. For example: guests at a long candlelit table"
+      - name: show
+        label: Show on website
+        type: boolean
+        default: true
+
+  # ----------------------------------------------------------------
+  # PAST-EVENT ALBUMS: Events page, "Past events"
+  # ----------------------------------------------------------------
+  - name: albums
+    label: Past event photos
+    type: file
+    path: content/albums.json
+    format: json
+    list:
+      collapsible:
+        collapsed: true
+        summary: "{title}"
+    fields:
+      - name: title
+        label: Event name
+        type: string
+        required: true
+      - name: when
+        label: When it was
+        type: string
+        description: "For example: March 2026"
+      - name: space
+        label: Where
+        type: string
+        description: "For example: The House"
+      - name: cover
+        label: Cover photo
+        type: image
+        description: The photo people see before they open the album.
+        options:
+          media: photos
+      - name: photos
+        label: All the photos
+        type: image
+        description: Add as many as you like. They open full screen when someone clicks the album.
+        options:
+          media: photos
+          multiple:
+            max: 60
+      - name: show
+        label: Show on website
+        type: boolean
+        default: true
+
+  # ----------------------------------------------------------------
+  # GALLERY: Gallery page, photographers' projects
+  # ----------------------------------------------------------------
+  - name: gallery
+    label: Gallery
+    type: file
+    path: content/gallery.json
+    format: json
+    list:
+      collapsible:
+        collapsed: true
+        summary: "{title} – {photographer}"
+    fields:
+      - name: title
+        label: Project name
+        type: string
+        required: true
+      - name: category
+        label: Type of shoot
+        type: select
+        description: Decides which button on the Gallery page shows it.
+        options:
+          values:
+            - name: portrait
+              label: Portrait
+            - name: fashion
+              label: Fashion
+            - name: product
+              label: Product
+            - name: bridal
+              label: Bridal
+      - name: space
+        label: Space used
+        type: string
+        description: "For example: The Stables"
+      - name: photographer
+        label: Photographer
+        type: string
+      - name: link
+        label: Photographer's website or Instagram
+        type: string
+        description: Copy and paste the full address, starting with https:// (optional).
+      - name: photo
+        label: Photo
+        type: image
+        description: Only use photos the photographer has said yes to.
+        options:
+          media: photos
+      - name: photo_description
+        label: Describe the photo in a few words
+        type: string
+      - name: show
+        label: Show on website
+        type: boolean
+        default: true
+
+  # ----------------------------------------------------------------
+  # SPACES: Spaces page and the homepage panels
+  # ----------------------------------------------------------------
+  - name: spaces
+    label: Spaces and prices
+    type: file
+    path: content/spaces.json
+    format: json
+    fields:
+      - name: house
+        label: The House
+        type: object
+        fields:
+          - name: photo
+            label: Photo
+            type: image
+            options:
+              media: photos
+          - name: photo_description
+            label: Describe the photo in a few words
+            type: string
+          - name: tagline
+            label: Short line on the homepage
+            type: string
+            description: "A few words. For example: Period rooms & chandeliers"
+          - name: description
+            label: About this space
+            type: text
+            description: One or two sentences.
+          - name: hourly
+            label: Price per hour
+            type: string
+            description: "For example: $50"
+          - name: half_day
+            label: Price for a half day (4 hours)
+            type: string
+          - name: full_day
+            label: Price for a full day (8 hours)
+            type: string
+          - name: note
+            label: Note under the prices
+            type: string
+            description: Optional. Leave empty for no note.
+      - name: stables
+        label: The Stables
+        type: object
+        fields:
+          - name: photo
+            label: Photo
+            type: image
+            options:
+              media: photos
+          - name: photo_description
+            label: Describe the photo in a few words
+            type: string
+          - name: tagline
+            label: Short line on the homepage
+            type: string
+            description: "A few words. For example: Period rooms & chandeliers"
+          - name: description
+            label: About this space
+            type: text
+            description: One or two sentences.
+          - name: hourly
+            label: Price per hour
+            type: string
+            description: "For example: $50"
+          - name: half_day
+            label: Price for a half day (4 hours)
+            type: string
+          - name: full_day
+            label: Price for a full day (8 hours)
+            type: string
+          - name: note
+            label: Note under the prices
+            type: string
+            description: Optional. Leave empty for no note.
+      - name: garden
+        label: The Garden
+        type: object
+        fields:
+          - name: photo
+            label: Photo
+            type: image
+            options:
+              media: photos
+          - name: photo_description
+            label: Describe the photo in a few words
+            type: string
+          - name: tagline
+            label: Short line on the homepage
+            type: string
+            description: "A few words. For example: Period rooms & chandeliers"
+          - name: description
+            label: About this space
+            type: text
+            description: One or two sentences.
+          - name: hourly
+            label: Price per hour
+            type: string
+            description: "For example: $50"
+          - name: half_day
+            label: Price for a half day (4 hours)
+            type: string
+          - name: full_day
+            label: Price for a full day (8 hours)
+            type: string
+          - name: note
+            label: Note under the prices
+            type: string
+            description: Optional. Leave empty for no note.
+
+  # ----------------------------------------------------------------
+  # STORIES: Stories page
+  # ----------------------------------------------------------------
+  - name: stories
+    label: Stories
+    type: file
+    path: content/stories.json
+    format: json
+    fields:
+      - name: golden_child
+        label: Golden Child of the Month
+        type: object
+        fields:
+          - name: month
+            label: Month
+            type: string
+            description: "For example: December 2026"
+          - name: name
+            label: Their name
+            type: string
+            description: Only with their permission.
+          - name: photo
+            label: Photo
+            type: image
+            options:
+              media: photos
+          - name: photo_description
+            label: Describe the photo in a few words
+            type: string
+          - name: story
+            label: Why we're celebrating them
+            type: text
+          - name: show
+            label: Show on website
+            type: boolean
+            default: true
+      - name: misfit_spotlight
+        label: Misfit Spotlight
+        type: object
+        fields:
+          - name: name
+            label: Their name
+            type: string
+            description: Only with their permission.
+          - name: photo
+            label: Photo
+            type: image
+            options:
+              media: photos
+          - name: photo_description
+            label: Describe the photo in a few words
+            type: string
+          - name: story
+            label: Their story
+            type: text
+          - name: show
+            label: Show on website
+            type: boolean
+            default: true
+      - name: community_stories
+        label: Community stories
+        type: object
+        description: Stories people sent in. Paste the story from the email, check it, then tick "Show on website".
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title} – {name}"
+        fields:
+          - name: title
+            label: Story title
+            type: string
+            required: true
+          - name: name
+            label: Name to show
+            type: string
+            description: First name only, or write Anonymous. Use what the person asked for.
+          - name: story
+            label: The story
+            type: text
+            description: Leave an empty line between paragraphs.
+          - name: photo
+            label: Photo (optional)
+            type: image
+            options:
+              media: photos
+          - name: date
+            label: Date received
+            type: date
+            options:
+              format: yyyy-MM-dd
+          - name: show
+            label: Show on website
+            type: boolean
+            default: false
+            description: Tick when you've read it and the person has agreed to share it.
+      - name: testimonials
+        label: Quotes from the community
+        type: object
+        description: Only real quotes, with the person's permission.
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{quote}"
+        fields:
+          - name: quote
+            label: Quote
+            type: text
+          - name: credit
+            label: Who said it
+            type: string
+            description: First name, initials or "Community member".
+          - name: show
+            label: Show on website
+            type: boolean
+            default: true

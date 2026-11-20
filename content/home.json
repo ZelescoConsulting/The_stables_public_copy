@@ -1,0 +1,23 @@
+{
+  "opening_photo": "https://images.pexels.com/photos/6567356/pexels-photo-6567356.jpeg?auto=compress&cs=tinysrgb&w=1920",
+  "play_video": true,
+  "collage": [
+    {
+      "photo": "https://images.pexels.com/photos/40225562/pexels-photo-40225562.jpeg?auto=compress&cs=tinysrgb&w=1000",
+      "photo_description": "portrait against red velvet"
+    },
+    {
+      "photo": "https://images.pexels.com/photos/3736897/pexels-photo-3736897.jpeg?auto=compress&cs=tinysrgb&w=900",
+      "photo_description": "vintage shop display"
+    },
+    {
+      "photo": "https://images.pexels.com/photos/7443791/pexels-photo-7443791.jpeg?auto=compress&cs=tinysrgb&w=700",
+      "photo_description": "arched windows in a heritage building"
+    },
+    {
+      "photo": "https://images.pexels.com/photos/16550795/pexels-photo-16550795.jpeg?auto=compress&cs=tinysrgb&w=700",
+      "photo_description": "stained glass windows"
+    }
+  ],
+  "closing_photo": "https://images.pexels.com/photos/4913327/pexels-photo-4913327.jpeg?auto=compress&cs=tinysrgb&w=1920"
+}
