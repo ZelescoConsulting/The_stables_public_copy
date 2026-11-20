@@ -1,0 +1,484 @@
+.preview-notice {
+  background-color: var(--color-gold);
+  color: var(--color-ink);
+  padding: 0.8rem var(--gutter);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.connect {
+  background-color: var(--color-ink);
+  color: var(--color-cream);
+  padding: 5rem var(--gutter) var(--section-space);
+}
+
+.connect-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid rgba(244, 240, 233, 0.25);
+  border-bottom: 1px solid rgba(244, 240, 233, 0.25);
+  margin-bottom: 4rem;
+}
+
+.connect-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.75rem 1.5rem;
+  border: none;
+  border-left: 1px solid rgba(244, 240, 233, 0.25);
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+.connect-tab:first-child {
+  border-left: none;
+}
+
+.connect-tab:hover {
+  opacity: 0.85;
+}
+
+.connect-tab[aria-selected="true"] {
+  opacity: 1;
+  background-color: rgba(244, 240, 233, 0.05);
+  box-shadow: inset 0 3px 0 var(--color-gold);
+}
+
+.connect-tab-number {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  color: var(--color-gold);
+}
+
+.connect-tab-name {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+}
+
+.connect-tab-note {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.connect-panel {
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+
+.connect-panel:not([hidden]) {
+  animation: panel-in 0.5s ease;
+}
+
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.connect-intro {
+  margin-bottom: 2.5rem;
+}
+
+.connect-intro h2 {
+  color: var(--color-cream);
+}
+
+.connect-small {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.connect-small a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.connect-intro .button {
+  margin: 1rem 0 1.5rem;
+}
+
+.space-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.space-choice {
+  padding: 0.8rem 1.6rem;
+  border: 1px solid rgba(244, 240, 233, 0.4);
+  background: none;
+  color: var(--color-cream);
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.space-choice:hover {
+  border-color: var(--color-cream);
+}
+
+.space-choice[aria-pressed="true"] {
+  background-color: var(--color-cream);
+  border-color: var(--color-cream);
+  color: var(--color-ink);
+}
+
+.booker {
+  border: 1px solid rgba(244, 240, 233, 0.25);
+  padding: 2rem;
+}
+
+.booker-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(244, 240, 233, 0.15);
+}
+
+.booker-name {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.booker-lengths {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pill {
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(244, 240, 233, 0.35);
+  border-radius: 999px;
+  background: none;
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.pill:hover {
+  border-color: var(--color-gold);
+}
+
+.pill[aria-pressed="true"] {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+
+.booker-body {
+  display: grid;
+  grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+  gap: 4rem;
+}
+
+.cal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cal-month {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+.cal-nav {
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid rgba(244, 240, 233, 0.35);
+  border-radius: 50%;
+  background: none;
+  color: var(--color-cream);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.cal-nav:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.3rem;
+}
+
+.cal-weekday {
+  text-align: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  padding-bottom: 0.4rem;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.cal-day.has-times {
+  border-color: rgba(244, 240, 233, 0.35);
+}
+
+.cal-day.has-times:hover {
+  border-color: var(--color-gold);
+}
+
+.cal-day:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.cal-day.is-full {
+  text-decoration: line-through;
+}
+
+.cal-day[aria-pressed="true"] {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+
+.slots-heading {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
+}
+
+.slot-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+  gap: 0.5rem;
+  max-height: 20rem;
+  overflow-y: auto;
+}
+
+.slot-empty {
+  opacity: 0.7;
+  font-size: 0.95rem;
+}
+
+.booker-footnote {
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+.booker-form,
+.booker-done {
+  max-width: 36rem;
+}
+
+.booker-summary {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.booker-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.booker-done h3 {
+  color: var(--color-gold);
+}
+
+.field {
+  display: block;
+  margin-bottom: 1.25rem;
+}
+
+.field span {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  opacity: 0.8;
+}
+
+.field em {
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid currentColor;
+  border-color: rgba(128, 128, 128, 0.5);
+  background-color: transparent;
+  color: inherit;
+  font-family: var(--font-body);
+  font-size: 1rem;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--color-gold);
+}
+
+.field select option {
+  color: var(--color-ink);
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1.25rem;
+}
+
+.connect-signup {
+  max-width: 34rem;
+}
+
+.connect-signup .signup-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 1.25rem 0 0.75rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.connect-signup .signup-consent input {
+  margin-top: 0.3rem;
+  accent-color: var(--color-gold);
+}
+
+.form-done {
+  margin-top: 1.5rem;
+  color: var(--color-gold);
+}
+
+.form-error {
+  margin-top: 1rem;
+  color: var(--color-crimson);
+}
+
+.enquiry-dialog {
+  width: min(40rem, calc(100% - 2rem));
+  max-height: calc(100vh - 2rem);
+  margin: auto;
+  padding: 0;
+  border: none;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+}
+
+.enquiry-dialog::backdrop {
+  background-color: rgba(42, 41, 43, 0.75);
+}
+
+.enquiry-dialog[open] {
+  animation: panel-in 0.35s ease;
+}
+
+.enquiry-inner {
+  padding: 2.5rem;
+}
+
+.enquiry-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.enquiry-top h2 {
+  margin: 0;
+}
+
+.enquiry-close {
+  border: none;
+  background: none;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.enquiry-close:hover {
+  color: var(--color-crimson);
+}
+
+.form-privacy {
+  margin-bottom: 1.25rem;
+}
+
+.enquiry-dialog .form-done {
+  color: var(--color-ink);
+  margin-top: 0;
+}
+
+.enquiry-dialog .form-done h3 {
+  color: var(--color-crimson);
+}
+
+@media (max-width: 900px) {
+  .connect-tabs {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .connect-tab:nth-child(3) {
+    border-left: none;
+  }
+
+  .connect-tab:nth-child(n + 3) {
+    border-top: 1px solid rgba(244, 240, 233, 0.25);
+  }
+
+  .connect-tab-name {
+    font-size: 1.2rem;
+  }
+
+  .booker {
+    padding: 1.25rem;
+  }
+
+  .booker-body {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .enquiry-inner {
+    padding: 1.5rem;
+  }
+}

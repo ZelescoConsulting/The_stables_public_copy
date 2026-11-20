@@ -1,0 +1,32 @@
+{
+  "house": {
+    "photo": "https://images.pexels.com/photos/38924068/pexels-photo-38924068.jpeg?auto=compress&cs=tinysrgb&w=1920",
+    "photo_description": "Victorian-style room with a chandelier",
+    "tagline": "Period rooms & chandeliers",
+    "description": "Period rooms with ornate ceilings, a chandelier and tall windows. Ideal for portraits, editorial and fashion.",
+    "hourly": "$50",
+    "half_day": "$200",
+    "full_day": "$350",
+    "note": "[Confirm rates for this space.]"
+  },
+  "stables": {
+    "photo": "https://images.pexels.com/photos/38239967/pexels-photo-38239967.jpeg?auto=compress&cs=tinysrgb&w=1920",
+    "photo_description": "rustic barn interior with sunlit timber",
+    "tagline": "Timber beams & raw texture",
+    "description": "The original stables, with timber beams and raw textures. Light falls through the slats in the afternoon.",
+    "hourly": "$50",
+    "half_day": "$200",
+    "full_day": "$350",
+    "note": "[Confirm rates for this space.]"
+  },
+  "garden": {
+    "photo": "https://images.pexels.com/photos/7174111/pexels-photo-7174111.jpeg?auto=compress&cs=tinysrgb&w=1920",
+    "photo_description": "green garden with a path and gazebo",
+    "tagline": "Leafy, private & outdoor",
+    "description": "A private, leafy garden out the back, with a timber gazebo. Ideal for natural-light and lifestyle shoots.",
+    "hourly": "$50",
+    "half_day": "$200",
+    "full_day": "$350",
+    "note": "[Confirm rates for this space.]"
+  }
+}

@@ -1,0 +1,41 @@
+[
+  {
+    "title": "[Candlelit supper club]",
+    "when": "[Month, year]",
+    "space": "The House",
+    "cover": "https://images.pexels.com/photos/4992827/pexels-photo-4992827.jpeg?auto=compress&cs=tinysrgb&w=900",
+    "photos": [
+      "https://images.pexels.com/photos/4992827/pexels-photo-4992827.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/4989546/pexels-photo-4989546.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/28059309/pexels-photo-28059309.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/3171837/pexels-photo-3171837.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    ],
+    "show": true
+  },
+  {
+    "title": "[Portrait masterclass]",
+    "when": "[Month, year]",
+    "space": "The Stables",
+    "cover": "https://images.pexels.com/photos/3856035/pexels-photo-3856035.jpeg?auto=compress&cs=tinysrgb&w=900",
+    "photos": [
+      "https://images.pexels.com/photos/3856035/pexels-photo-3856035.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/3856020/pexels-photo-3856020.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/15935628/pexels-photo-15935628.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/30697991/pexels-photo-30697991.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    ],
+    "show": true
+  },
+  {
+    "title": "[Exhibition opening night]",
+    "when": "[Month, year]",
+    "space": "The House",
+    "cover": "https://images.pexels.com/photos/2559741/pexels-photo-2559741.jpeg?auto=compress&cs=tinysrgb&w=900",
+    "photos": [
+      "https://images.pexels.com/photos/2559741/pexels-photo-2559741.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/7513474/pexels-photo-7513474.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/3171770/pexels-photo-3171770.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "https://images.pexels.com/photos/6405781/pexels-photo-6405781.jpeg?auto=compress&cs=tinysrgb&w=1600"
+    ],
+    "show": true
+  }
+]

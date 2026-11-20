@@ -1,0 +1,74 @@
+[
+  {
+    "title": "[Portrait shoot day]",
+    "date": "2026-11-28",
+    "time": "[10am–4pm]",
+    "where": "The House",
+    "cost": "[$XX]",
+    "host": "[Photographer]",
+    "description": "[A day of booked portrait sessions with a guest photographer, in the House.]",
+    "photo": "https://images.pexels.com/photos/3973940/pexels-photo-3973940.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "photo_description": "portrait shoot day",
+    "show": true
+  },
+  {
+    "title": "[Open studio day]",
+    "date": "2026-12-05",
+    "time": "[11am–3pm]",
+    "where": "All spaces",
+    "cost": "Free",
+    "host": "Free entry",
+    "description": "[Wander through all three spaces, meet the team and ask about hiring the studio.]",
+    "photo": "https://images.pexels.com/photos/15935628/pexels-photo-15935628.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "photo_description": "open studio day",
+    "show": true
+  },
+  {
+    "title": "[Lighting workshop]",
+    "date": "2026-12-12",
+    "time": "[6pm–9pm]",
+    "where": "The Stables",
+    "cost": "[$XX]",
+    "host": "[Host]",
+    "description": "[A hands-on workshop on working with natural and studio light.]",
+    "photo": "https://images.pexels.com/photos/30697991/pexels-photo-30697991.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "photo_description": "lighting workshop",
+    "show": true
+  },
+  {
+    "title": "[Editorial masterclass]",
+    "date": "2027-01-16",
+    "time": "[9am–5pm]",
+    "where": "The House",
+    "cost": "[$XX]",
+    "host": "[Photographer]",
+    "description": "[Plan, style and shoot an editorial story with a working photographer.]",
+    "photo": "https://images.pexels.com/photos/12562547/pexels-photo-12562547.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "photo_description": "editorial masterclass",
+    "show": true
+  },
+  {
+    "title": "[Model test shoots]",
+    "date": "2027-01-30",
+    "time": "[Sessions from 10am]",
+    "where": "The Garden",
+    "cost": "[$XX]",
+    "host": "Bookings open",
+    "description": "[Short test-shoot sessions for new models and photographers building their portfolios.]",
+    "photo": "https://images.pexels.com/photos/11388583/pexels-photo-11388583.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "photo_description": "model test shoots",
+    "show": true
+  },
+  {
+    "title": "[Fashion collective]",
+    "date": "2027-02-13",
+    "time": "[7pm–10pm]",
+    "where": "The House",
+    "cost": "[$XX]",
+    "host": "[Host]",
+    "description": "[An evening showcase of emerging Melbourne designers, shot live in the studio.]",
+    "photo": "https://images.pexels.com/photos/13952442/pexels-photo-13952442.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "photo_description": "fashion collective",
+    "show": true
+  }
+]

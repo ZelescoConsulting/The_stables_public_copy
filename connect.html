@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book &amp; Connect | The Stables of Melbourne</title>
+  <meta name="description" content="Book a studio tour, hire a space, send an enquiry or subscribe to news from The Stables of Melbourne.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500&family=Jost:wght@300;400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="community.css">
+  <link rel="stylesheet" href="connect.css">
+
+  <script>document.documentElement.classList.add("js");
+</script>
+</head>
+
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <img src="images/logo.png" alt="The Stables of Melbourne" class="logo-image">
+    </a>
+
+    <nav class="main-nav">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="spaces.html">Spaces &amp; Rates</a></li>
+        <li class="has-dropdown">
+          <a href="gallery.html">Gallery</a>
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-label="More in Gallery">&#9662;</button>
+          <ul class="dropdown">
+            <li><a href="gallery.html">Collections</a></li>
+            <li><a href="stories.html">Stories</a></li>
+          </ul>
+        </li>
+        <li><a href="events.html">Events</a></li>
+      </ul>
+    </nav>
+
+    <a href="#tour" class="button button-light header-button">Book a tour &rarr;</a>
+  </header>
+
+  <main>
+
+    <section class="page-hero">
+      <p class="eyebrow">Book &amp; Connect</p>
+      <h1>Come and see us.</h1>
+      <p class="page-hero-intro">
+        Tour the studio, hire a space, ask us anything, or hear about what's coming up.
+      </p>
+    </section>
+
+    <div class="preview-notice" role="note">
+      <strong>Preview:</strong> the calendars and forms on this page are simulations. Nothing is booked or sent.
+    </div>
+
+    <section class="connect">
+
+      <div class="connect-tabs" role="tablist" aria-label="Ways to connect">
+        <button class="connect-tab" type="button" role="tab" id="tab-tour" data-tab="tour" aria-controls="panel-tour" aria-selected="true">
+          <span class="connect-tab-number">01</span>
+          <span class="connect-tab-name">Book a tour</span>
+          <span class="connect-tab-note">30 or 45 minutes</span>
+        </button>
+        <button class="connect-tab" type="button" role="tab" id="tab-space" data-tab="space" aria-controls="panel-space" aria-selected="false">
+          <span class="connect-tab-number">02</span>
+          <span class="connect-tab-name">Book a space</span>
+          <span class="connect-tab-note">By the hour or the day</span>
+        </button>
+        <button class="connect-tab" type="button" role="tab" id="tab-enquire" data-tab="enquire" aria-controls="panel-enquire" aria-selected="false">
+          <span class="connect-tab-number">03</span>
+          <span class="connect-tab-name">Enquire</span>
+          <span class="connect-tab-note">Send us a message</span>
+        </button>
+        <button class="connect-tab" type="button" role="tab" id="tab-subscribe" data-tab="subscribe" aria-controls="panel-subscribe" aria-selected="false">
+          <span class="connect-tab-number">04</span>
+          <span class="connect-tab-name">Subscribe</span>
+          <span class="connect-tab-note">News and events</span>
+        </button>
+      </div>
+
+      <div class="connect-panel" id="panel-tour" role="tabpanel" aria-labelledby="tab-tour">
+        <div class="connect-intro">
+          <h2>Book a tour</h2>
+          <p>
+            Walk through the House, the Stables and the Garden with Lucia before you book.
+            Choose a short 30-minute look around, or 45 minutes if you'd like to talk through a shoot.
+          </p>
+
+          <p class="connect-small">[Tours run daily, 10am&ndash;5pm.]</p>
+        </div>
+
+        <div class="booker"
+             data-demo="tour"
+             data-name="Studio tour"
+             data-durations="30,45"
+             data-labels="30 min,45 min"
+             data-open="10:00"
+             data-close="17:00"
+             data-step="15"
+             data-buffer="15"
+             data-approval="false">
+        </div>
+
+      </div>
+
+      <div class="connect-panel" id="panel-space" role="tabpanel" aria-labelledby="tab-space" hidden>
+        <div class="connect-intro">
+          <h2>Book a space</h2>
+          <p>
+            Choose a space, a length and a start time. Your booking is a request:
+            Lucia will check the details and email you to confirm.
+          </p>
+
+          <p class="connect-small">[Hourly $50 &middot; Half day (4 hrs) $200 &middot; Full day (8 hrs) $350. No payment is taken online.]</p>
+        </div>
+
+        <div class="space-choices" role="group" aria-label="Choose a space">
+          <button class="space-choice" type="button" data-space="house" aria-pressed="true">The House</button>
+          <button class="space-choice" type="button" data-space="stables" aria-pressed="false">The Stables</button>
+          <button class="space-choice" type="button" data-space="garden" aria-pressed="false">The Garden</button>
+        </div>
+
+        <div class="space-booking" data-space="house">
+
+          <div class="booker"
+               data-demo="house"
+               data-name="The House"
+               data-durations="60,120,240,480"
+               data-labels="1 hour,2 hours,Half day,Full day"
+               data-open="10:00"
+               data-close="21:00"
+               data-step="60"
+               data-buffer="30"
+               data-approval="true">
+          </div>
+
+        </div>
+
+        <div class="space-booking" data-space="stables" hidden>
+
+          <div class="booker"
+               data-demo="stables"
+               data-name="The Stables"
+               data-durations="60,120,240,480"
+               data-labels="1 hour,2 hours,Half day,Full day"
+               data-open="10:00"
+               data-close="21:00"
+               data-step="60"
+               data-buffer="30"
+               data-approval="true">
+          </div>
+
+        </div>
+
+        <div class="space-booking" data-space="garden" hidden>
+
+          <div class="booker"
+               data-demo="garden"
+               data-name="The Garden"
+               data-durations="60,120,240,480"
+               data-labels="1 hour,2 hours,Half day,Full day"
+               data-open="10:00"
+               data-close="21:00"
+               data-step="60"
+               data-buffer="30"
+               data-approval="true">
+          </div>
+
+        </div>
+      </div>
+
+      <div class="connect-panel" id="panel-enquire" role="tabpanel" aria-labelledby="tab-enquire" hidden>
+        <div class="connect-intro">
+          <h2>Let's connect.</h2>
+          <p>
+            Have questions? Want to collaborate? Or just want to say hello?
+            We'd love to hear from you.
+          </p>
+          <button class="button button-cream" type="button" data-open-enquiry>Open the enquiry form &rarr;</button>
+          <p class="connect-small">
+            Or call <a href="tel:+61426281831">+61 426 281 831</a>.
+          </p>
+        </div>
+      </div>
+
+      <div class="connect-panel" id="panel-subscribe" role="tabpanel" aria-labelledby="tab-subscribe" hidden>
+        <div class="connect-intro">
+          <h2>Stay in the loop</h2>
+          <p>Events, workshops and studio news, a few times a year.</p>
+        </div>
+
+        <div class="connect-signup">
+          <form class="signup-form" id="connect-signup"
+                data-demo="true"
+                action="https://propertyguideau.us15.list-manage.com/subscribe/post?u=d25762e4846f1145394460221&amp;id=7e90947e41&amp;f_id=007c77e0f0"
+                method="post" target="_blank">
+            <label class="signup-field">
+              <span class="eyebrow">Email address</span>
+              <input type="email" name="EMAIL" placeholder="you@example.com" required>
+            </label>
+            <input type="hidden" name="tags" value="2895674">
+            <div style="position: absolute; left: -5000px;" aria-hidden="true">
+              <input type="text" name="b_d25762e4846f1145394460221_7e90947e41" tabindex="-1" value="">
+            </div>
+            <button type="submit" class="signup-submit" aria-label="Subscribe">&rarr;</button>
+          </form>
+          <label class="signup-consent">
+            <input type="checkbox" name="gdpr[101059]" value="Y" form="connect-signup" required>
+            <span>Yes, I'd like to receive emails from The Stables of Melbourne.</span>
+          </label>
+          <p class="signup-privacy">
+            Unsubscribe anytime, using the link in any email.
+            Read our <a href="privacy.html">Privacy Policy</a>.
+          </p>
+
+          <p class="form-done" id="signup-done" hidden>
+            Thank you. Please check your inbox to confirm your subscription.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <dialog class="enquiry-dialog" id="enquiry-dialog" aria-labelledby="enquiry-title">
+      <div class="enquiry-inner">
+        <div class="enquiry-top">
+          <h2 id="enquiry-title">Send an enquiry</h2>
+          <button class="enquiry-close" type="button" data-close-enquiry aria-label="Close">&times;</button>
+        </div>
+
+        <form class="enquiry-form" id="enquiry-form"
+              data-demo="true"
+              action="https://formspree.io/f/YOUR_FORM_ID"
+              method="POST">
+
+          <div class="field-row">
+            <label class="field">
+              <span>Name</span>
+              <input type="text" name="name" autocomplete="name" required>
+            </label>
+            <label class="field">
+              <span>Email</span>
+              <input type="email" name="email" autocomplete="email" required>
+            </label>
+          </div>
+
+          <div class="field-row">
+            <label class="field">
+              <span>Phone <em>(optional)</em></span>
+              <input type="tel" name="phone" autocomplete="tel">
+            </label>
+            <label class="field">
+              <span>About</span>
+              <select name="topic">
+                <option>Hiring a space</option>
+                <option>A studio tour</option>
+                <option>Events and workshops</option>
+                <option>Community access</option>
+                <option>Collaborating with us</option>
+                <option>Sharing my story</option>
+                <option>Something else</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Message</span>
+            <textarea name="message" rows="5" required></textarea>
+          </label>
+
+          <input type="text" name="_gotcha" class="visually-hidden" tabindex="-1" autocomplete="off">
+
+          <input type="hidden" name="_subject" value="New enquiry from The Stables website">
+
+          <p class="connect-small form-privacy">
+            We'll only use your details to reply. See our <a href="privacy.html">Privacy Policy</a>.
+          </p>
+
+          <button class="button button-dark" type="submit">Send enquiry &rarr;</button>
+          <p class="form-error" hidden>Sorry, that didn't send. Please try again, or call us.</p>
+        </form>
+
+        <div class="form-done" id="enquiry-done" hidden>
+          <h3>Thank you.</h3>
+          <p>Your message is on its way. Lucia will reply by email, usually within [two working days].</p>
+          <button class="button button-dark-outline" type="button" data-close-enquiry>Close</button>
+        </div>
+      </div>
+    </dialog>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-top">
+      <p class="footer-name">The Stables of Melbourne</p>
+
+      <div class="footer-column">
+        <h4>Visit</h4>
+        <p>Deepdene VIC 3103</p>
+        <p>Open daily, 10am&ndash;9pm</p>
+        <p>Closed public holidays</p>
+      </div>
+
+      <div class="footer-column">
+        <h4>Contact</h4>
+        <p><a href="tel:+61426281831">+61 426 281 831</a></p>
+        <p><a href="mailto:lucia@zelesco.com">lucia@zelesco.com</a></p>
+        <p><a href="https://www.instagram.com/YOUR_HANDLE/" target="_blank" rel="noopener">Instagram</a></p>
+        <p><a href="https://www.youtube.com/@YOUR_CHANNEL" target="_blank" rel="noopener">YouTube</a></p>
+        <p><a href="https://www.facebook.com/YOUR_PAGE" target="_blank" rel="noopener">Facebook</a></p>
+      </div>
+
+      <div class="footer-column">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="spaces.html">Spaces &amp; Rates</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="stories.html">Stories</a></li>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="connect.html">Book &amp; Connect</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-welcome">
+      <p class="footer-welcome-line">All nationalities, genders, and diversities are welcome here.</p>
+      <p class="footer-acknowledgement">
+        The Stables of Melbourne stands on the lands of the Wurundjeri Woi-wurrung people
+        of the Kulin Nation. We acknowledge them as the Traditional Owners, recognise their
+        ongoing connection to land, waters and culture, and pay our respects to Elders past
+        and present.
+      </p>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 The Stables of Melbourne</p>
+      <p><a href="privacy.html">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="terms.html">Terms &amp; Conditions</a></p>
+    </div>
+  </footer>
+
+  <script src="script.js">
+</script>
+  <script src="community.js">
+</script>
+  <script src="connect.js">
+</script>
+
+</body>
+</html>
