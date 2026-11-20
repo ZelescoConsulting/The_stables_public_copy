@@ -277,17 +277,23 @@
             <p>Be the first to hear about open studio days, events and availability.</p>
           </div>
 
-          <form class="signup-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <form class="signup-form" id="stables-signup"
+                action="https://app.kit.com/forms/10217727/subscriptions"
+                method="post" target="_blank">
             <label class="signup-field">
               <span class="eyebrow">Email address</span>
-              <input type="email" name="email" placeholder="you@example.com" required>
+              <input type="email" name="email_address" placeholder="you@example.com" required>
             </label>
-
-            <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
             <button type="submit" class="signup-submit" aria-label="Subscribe">&rarr;</button>
           </form>
-
+          <label class="signup-consent">
+            <input type="checkbox" form="stables-signup" required>
+            <span>Yes, I'd like to receive emails from The Stables of Melbourne.</span>
+          </label>
           <p class="signup-privacy">
+            Unsubscribe anytime, using the link in any email.
+            Read our <a href="privacy.html">Privacy Policy</a>.
+          </p>
             We'll only use your email to send studio news. Unsubscribe anytime.
             Read our <a href="privacy.html">Privacy Policy</a>.
           </p>
