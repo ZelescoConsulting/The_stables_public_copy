@@ -244,9 +244,27 @@ function fillGallery(projects) {
 
   grid.innerHTML = shown(projects).map(function (p, i) {
     const eyebrow = [labels[p.category] || "", p.space].filter(Boolean).map(esc).join(" &middot; ");
+
+    const extras = [].concat(p.photos || []).filter(Boolean);
+    const all = extras.length ? [p.photo].concat(extras).filter(Boolean) : [];
+
+    const picture = all.length
+      ? '<button class="album-open project-open" type="button" aria-label="See all ' + all.length + ' photos">' +
+          '<span class="project-media">' +
+            imgTag(p.photo, 900, p.photo_description) +
+            '<span class="album-count">' + all.length + " photos</span>" +
+          "</span>" +
+        "</button>" +
+        '<div class="album-photos" hidden>' +
+          all.map(function (src, n) {
+            return '<img data-src="' + esc(photoUrl(src, 1600)) + '" alt="' + esc(p.title + ", photo " + (n + 1)) + '">';
+          }).join("") +
+        "</div>"
+      : '<div class="project-media">' + imgTag(p.photo, 900, p.photo_description) + "</div>";
+
     return (
-      '<article class="project reveal" data-category="' + esc(p.category) + '"' + delay(i) + ">" +
-        '<div class="project-media">' + imgTag(p.photo, 900, p.photo_description) + "</div>" +
+      '<article class="project reveal' + (all.length ? " album" : "") + '" data-category="' + esc(p.category) + '"' + delay(i) + ">" +
+        picture +
         (eyebrow ? '<p class="eyebrow eyebrow-dark">' + eyebrow + "</p>" : "") +
         "<h3>" + esc(p.title) + "</h3>" +
         (p.photographer ? '<p class="project-credit">Photographed by ' + esc(p.photographer) + "</p>" : "") +
@@ -281,6 +299,21 @@ function fillSpaces(spaces) {
       note.hidden = !s.note;
     }
   });
+}
+
+function fillFaq(faq) {
+  const section = document.querySelector(".faq");
+  if (!section || !faq) return;
+
+  section.querySelectorAll("details").forEach(function (d) { d.remove(); });
+  section.insertAdjacentHTML("beforeend", shown(faq).map(function (item) {
+    return (
+      "<details>" +
+        "<summary>" + esc(item.question) + "</summary>" +
+        paragraphs(item.answer) +
+      "</details>"
+    );
+  }).join(""));
 }
 
 function fillStories(stories) {
@@ -357,7 +390,8 @@ function fillStories(stories) {
     albums: !!document.querySelector(".album-grid"),
     gallery: !!document.querySelector(".project-grid"),
     spaces: !!document.querySelector(".space-panel, .space-screen"),
-    stories: !!document.querySelector(".highlights")
+    stories: !!document.querySelector(".highlights"),
+    faq: !!document.querySelector(".faq")
   };
 
   const names = Object.keys(needs).filter(function (n) { return needs[n]; });
@@ -374,6 +408,7 @@ function fillStories(stories) {
       function () { fillAlbums(data.albums); },
       function () { fillGallery(data.gallery); },
       function () { fillSpaces(data.spaces); },
+      function () { fillFaq(data.faq); },
       function () { fillStories(data.stories); }
     ].forEach(function (fill) {
       try { fill(); } catch (error) { console.warn("Content not loaded:", error); }

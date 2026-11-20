@@ -1,0 +1,32 @@
+[
+  {
+    "question": "How do I book?",
+    "answer": "[Explain the booking process: enquiry, confirmation, payment.]",
+    "show": true
+  },
+  {
+    "question": "Can I book more than one space?",
+    "answer": "[Whether spaces can be combined, and how that's priced.]",
+    "show": true
+  },
+  {
+    "question": "Is a deposit required?",
+    "answer": "[Deposit amount and when it's due.]",
+    "show": true
+  },
+  {
+    "question": "What is the cancellation policy?",
+    "answer": "[How much notice is needed, and what happens to the deposit.]",
+    "show": true
+  },
+  {
+    "question": "What happens if it rains on a garden booking?",
+    "answer": "[Wet-weather options for the Garden.]",
+    "show": true
+  },
+  {
+    "question": "How many people can be in each space?",
+    "answer": "[Maximum numbers, including crew and models.]",
+    "show": true
+  }
+]

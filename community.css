@@ -471,3 +471,48 @@
     grid-template-columns: 1fr;
   }
 }
+
+.project-open .project-media {
+  display: block;
+  position: relative;
+}
+
+.project-open:hover .project-media img,
+.project-open:focus-visible .project-media img {
+  transform: scale(1.04);
+}
+
+.faq summary {
+  padding: 0.25rem 0;
+}
+
+.faq summary::after {
+  content: "+";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.faq summary:hover::after {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+
+.faq details[open] summary::after {
+  content: "+";
+  transform: rotate(45deg);
+}
+
+.faq summary:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 6px;
+}
