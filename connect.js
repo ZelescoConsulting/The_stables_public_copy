@@ -1,3 +1,21 @@
+const CAL_LINKS = {
+  tour:    "",
+  house:   "",
+  stables: "",
+  garden:  ""
+};
+
+const CALENDLY_COLOURS = "background_color=2a292b&text_color=f4f0e9&primary_color=d9a441";
+
+const CAL_COLOURS = {
+  "cal-brand": "#d9a441",
+  "cal-brand-emphasis": "#c4912f",
+  "cal-brand-text": "#2a292b",
+  "cal-text": "#f4f0e9",
+  "cal-bg": "#2a292b",
+  "cal-bg-booker": "#2a292b"
+};
+
 const tabs = document.querySelectorAll(".connect-tab");
 const panels = document.querySelectorAll(".connect-panel");
 
@@ -8,6 +26,7 @@ function showTab(name) {
   panels.forEach(function (panel) {
     panel.hidden = panel.id !== "panel-" + name;
   });
+  startCalendars();
 }
 
 tabs.forEach(function (tab) {
@@ -47,6 +66,7 @@ function chooseSpace(name) {
   spaceBookings.forEach(function (box) {
     box.hidden = box.dataset.space !== name;
   });
+  startCalendars();
 }
 
 spaceButtons.forEach(function (button) {
@@ -448,6 +468,75 @@ function makeBooker(box) {
   render();
 }
 
-document.querySelectorAll(".booker[data-demo]").forEach(makeBooker);
+function loadCalCom() {
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+}
+
+function startCalendars() {
+  document.querySelectorAll(".booker.is-live:not([data-started])").forEach(function (box) {
+    if (box.offsetParent === null) return;
+    box.dataset.started = "true";
+
+    const name = box.dataset.demo;
+    box.id = "cal-" + name;
+
+    if (/calendly\.com/.test(CAL_LINKS[name])) {
+      startCalendly(box, CAL_LINKS[name]);
+      return;
+    }
+
+    loadCalCom();
+    Cal("init", name, { origin: "https://cal.com" });
+    Cal.ns[name]("inline", {
+      elementOrSelector: "#cal-" + name,
+      calLink: CAL_LINKS[name],
+      config: { layout: "month_view", theme: "dark" }
+    });
+    Cal.ns[name]("ui", {
+      theme: "dark",
+      hideEventTypeDetails: false,
+      layout: "month_view",
+      cssVarsPerTheme: { dark: CAL_COLOURS }
+    });
+  });
+}
+
+function startCalendly(box, link) {
+  box.classList.add("is-calendly");
+  const url = (/^https?:\/\//.test(link) ? link : "https://" + link) +
+    (link.indexOf("?") === -1 ? "?" : "&") + "hide_gdpr_banner=1&" + CALENDLY_COLOURS;
+  const place = function () {
+    window.Calendly.initInlineWidget({ url: url, parentElement: box });
+  };
+  if (window.Calendly) return place();
+
+  let script = document.getElementById("calendly-script");
+  if (!script) {
+    script = document.createElement("script");
+    script.id = "calendly-script";
+    script.src = "https://assets.calendly.com/assets/external/widget.js";
+    document.head.appendChild(script);
+  }
+  script.addEventListener("load", place);
+}
+
+document.querySelectorAll(".booker[data-demo]").forEach(function (box) {
+  let link = (CAL_LINKS[box.dataset.demo] || "").trim();
+  if (!/calendly\.com/.test(link)) {
+    link = link.replace(/^https?:\/\/(app\.)?cal\.com\//, "");
+  }
+  if (link) {
+    CAL_LINKS[box.dataset.demo] = link;
+    box.classList.add("is-live");
+    box.innerHTML = "";
+  } else {
+    makeBooker(box);
+  }
+});
+
+const stillPreview = document.querySelectorAll(".booker:not(.is-live), form[data-demo='true']").length;
+const previewNotice = document.querySelector(".preview-notice");
+if (previewNotice && stillPreview === 0) previewNotice.hidden = true;
 
 openFromHash();
+startCalendars();

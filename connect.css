@@ -360,6 +360,26 @@
   gap: 0 1.25rem;
 }
 
+.booker.is-live {
+  padding: 0;
+  border: none;
+  min-height: 34rem;
+}
+
+.booker.is-live iframe {
+  width: 100%;
+}
+
+.booker.is-calendly {
+  height: 44rem;
+}
+
+@media (max-width: 900px) {
+  .booker.is-calendly {
+    height: 52rem;
+  }
+}
+
 .connect-signup {
   max-width: 34rem;
 }
