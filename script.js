@@ -4,8 +4,8 @@ const header = document.querySelector(".site-header");
 const hero = document.querySelector(".hero");
 
 (function () {
-  const INTRO_TIME = 3800;
-  const EVERY_VISIT = true;
+  const INTRO_TIME = 1000;
+  const EVERY_VISIT = false;
 
   const body = document.body;
   if (!body.classList.contains("home")) return;
@@ -105,22 +105,41 @@ const hero = document.querySelector(".hero");
     }
     return [223, 192, 182];
   }
-let logoTimer = null;
+ let logoTimer = null;
+  let logoTop = null;
   function swapLogo(src) {
     if (!logo || logo.dataset.want === src) return;
     logo.dataset.want = src;
-    if (!logo.getAttribute("data-want-init")) {
-      logo.setAttribute("data-want-init", "1");
+
+    if (!logoTop) {
       logo.setAttribute("src", src);
+      logoTop = logo.cloneNode();
+      logoTop.removeAttribute("data-want");
+      logoTop.className = "logo-image logo-image-top";
+      logoTop.alt = "";
+      logoTop.setAttribute("aria-hidden", "true");
+      logo.parentNode.appendChild(logoTop);
       return;
     }
+
     clearTimeout(logoTimer);
-    logo.classList.add("is-swapping");
-    logoTimer = setTimeout(function () {
-      logo.setAttribute("src", src);
-      logo.classList.remove("is-swapping");
-    }, 250);
+    if (logoTop.classList.contains("is-showing")) {
+      logo.setAttribute("src", logoTop.getAttribute("src"));
+    }
+    logoTop.classList.remove("is-showing");
+    logoTop.onload = function () {
+      logoTop.onload = null;
+      logoTop.getBoundingClientRect();
+      logoTop.classList.add("is-showing");
+      logoTimer = setTimeout(function () {
+        logo.setAttribute("src", src);
+        logoTop.classList.remove("is-showing");
+      }, 700);
+    };
+    logoTop.setAttribute("src", src);
+    if (logoTop.complete) logoTop.onload();
   }
+
   function same(a, b) { return a[0] === b[0] && a[1] === b[1] && a[2] === b[2]; }
   function rgba(c) { return "rgba(" + c.join(", ") + ", 0.70)"; }
 
