@@ -6,6 +6,7 @@
   --color-gold: #c9a26b;
   --color-muted: #57504a;
   --color-clay: #d97e7a;
+  --color-blush: #dfc0b6;
   --color-white: #ffffff;
   --color-line: #d9b8a8;
   --color-rust: var(--color-crimson);
@@ -32,7 +33,7 @@ html {
 }
 
 body {
-  background-color: var(--color-clay);
+  background-color: var(--color-blush);
   color: var(--color-ink);
   font-family: var(--font-body);
   font-weight: 300;
@@ -507,7 +508,7 @@ p {
 
 .next-event {
   padding: var(--section-space) var(--gutter);
-  background-color: var(--color-clay);
+  background-color: var(--color-blush);
 }
 
 .featured-event {
