@@ -5,7 +5,7 @@ const hero = document.querySelector(".hero");
 
 (function () {
   const INTRO_TIME = 1000;
-  const EVERY_VISIT = false;
+  const EVERY_VISIT = true;
 
   const body = document.body;
   if (!body.classList.contains("home")) return;
