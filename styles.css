@@ -11,8 +11,8 @@
   --color-line: #d9b8a8;
   --color-rust: var(--color-crimson);
 
-  --font-heading: "Bodoni Moda", Georgia, serif;
-  --font-body: "Jost", Arial, sans-serif;
+  --font-heading: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Lato", Arial, sans-serif;
   --font-script: "Mrs Saint Delafield", cursive;
 
   --gutter: 3rem;
@@ -217,20 +217,8 @@ p {
 
   color: var(--color-white);
   background-color: rgba(42, 41, 43, 0.92);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
   transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s;
-}
-
-.home .site-header {
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-100%);
-}
-
-.home .site-header.is-visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
 }
 
 .logo {

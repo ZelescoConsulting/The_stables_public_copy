@@ -1,7 +1,0 @@
-      - name: photo_focus
-        label: Photo focus
-        type: select
-        description: Which part of the photo matters most? It stays in view when the photo is narrowed into a strip. Leave as Centre if unsure.
-        options:
-          values: ["Left", "Centre", "Right"]
-        default: Centre

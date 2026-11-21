@@ -3,21 +3,166 @@ const prefersLessMotion = window.matchMedia("(prefers-reduced-motion: reduce)").
 const header = document.querySelector(".site-header");
 const hero = document.querySelector(".hero");
 
-function updateHeader() {
-  const trigger = hero.offsetHeight * 0.6;
+(function () {
+  const INTRO_TIME = 3800;
+  const EVERY_VISIT = true;
 
-  if (window.scrollY > trigger) {
-    header.classList.add("is-visible");
-  } else {
-    header.classList.remove("is-visible");
+  const body = document.body;
+  if (!body.classList.contains("home")) return;
+
+  const intro = document.querySelector(".hero-intro");
+  const seal = intro ? intro.querySelector(".intro-seal") : null;
+  const ring = seal ? seal.querySelector(".intro-ring") : null;
+  const crest = document.querySelector(".hero-crest");
+  if (!intro || !seal || !crest) { body.classList.add("intro-done", "intro-skip"); return; }
+
+  const skipEvents = ["click", "keydown", "wheel", "touchstart"];
+  let timer = null;
+
+  function restInCrest() {
+    seal.style.transform = "";
+    seal.style.animation = "";
+    crest.appendChild(seal);
+    intro.hidden = true;
   }
-}
 
-if (header && hero) {
-  window.addEventListener("scroll", updateHeader);
-  updateHeader();
-}
+  function finish() {
+    if (body.classList.contains("intro-done")) return;
+    clearTimeout(timer);
+    skipEvents.forEach(function (name) { window.removeEventListener(name, finish); });
+    try { sessionStorage.setItem("stables-intro", "seen"); } catch (e) {}
 
+    const m = new DOMMatrix(getComputedStyle(ring).transform);
+    const angle = Math.atan2(m.b, m.a) * 180 / Math.PI;
+    ring.style.animation = "none";
+    ring.style.transform = "rotate(" + angle + "deg)";
+    ring.getBoundingClientRect();
+    ring.style.transition = "transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.9s ease 0.3s";
+    ring.style.transform = "rotate(" + (angle + 70) + "deg)";
+
+    const from = seal.getBoundingClientRect();
+    const to = crest.getBoundingClientRect();
+    const dx = (to.left + to.width / 2) - (from.left + from.width / 2);
+    const dy = (to.top + to.height / 2) - (from.top + from.height / 2);
+    seal.style.animation = "none";
+    seal.getBoundingClientRect();
+    seal.style.transform = "translate(" + dx + "px, " + dy + "px) scale(" + (to.width / from.width) + ")";
+
+    body.classList.add("intro-done");
+
+    setTimeout(restInCrest, 1600);
+  }
+
+  function start() {
+    let seen = false;
+    try { seen = sessionStorage.getItem("stables-intro") === "seen"; } catch (e) {}
+
+    if (prefersLessMotion || (!EVERY_VISIT && seen)) {
+      body.classList.add("intro-done", "intro-skip");
+      restInCrest();
+      return;
+    }
+    timer = setTimeout(finish, INTRO_TIME);
+    skipEvents.forEach(function (name) {
+      window.addEventListener(name, finish, { passive: true });
+    });
+  }
+
+  start();
+
+  window.addEventListener("pageshow", function (event) {
+    if (!event.persisted || !EVERY_VISIT || prefersLessMotion) return;
+    body.classList.remove("intro-done", "intro-skip");
+    ring.style.cssText = "";
+    seal.style.cssText = "";
+    intro.querySelector(".intro-seal") || intro.appendChild(seal);
+    intro.hidden = false;
+    start();
+  });
+})();
+
+(function () {
+  if (!header) return;
+  const logo = header.querySelector(".logo-image");
+  const LOGOS = {
+    dark: "images/logo.png",
+    wine: "images/logo-wine.png",
+    light: "images/logo-light.png"
+  };
+  Object.keys(LOGOS).forEach(function (k) { new Image().src = LOGOS[k]; });
+
+  function colourAt(y) {
+    const stack = document.elementsFromPoint(window.innerWidth / 2, y);
+    for (let i = 0; i < stack.length; i++) {
+      let el = stack[i];
+      if (header.contains(el)) continue;
+      while (el && el !== document.documentElement) {
+        const m = getComputedStyle(el).backgroundColor.match(/[\d.]+/g);
+        if (m && (m.length < 4 || Number(m[3]) > 0.5)) return m.slice(0, 3).map(Number);
+        el = el.parentElement;
+      }
+    }
+    return [223, 192, 182];
+  }
+
+  function same(a, b) { return a[0] === b[0] && a[1] === b[1] && a[2] === b[2]; }
+  function rgba(c) { return "rgba(" + c.join(", ") + ", 0.94)"; }
+
+  let ticking = false;
+  function update() {
+    ticking = false;
+    const h = header.offsetHeight;
+    const topColour = colourAt(1);
+    const bottomColour = colourAt(h - 1);
+
+    if (same(topColour, bottomColour)) {
+      header.style.background = rgba(topColour);
+    } else {
+      let lo = 1, hi = h - 1;
+      for (let k = 0; k < 7; k++) {
+        const mid = (lo + hi) / 2;
+        if (same(colourAt(mid), topColour)) lo = mid; else hi = mid;
+      }
+      const edge = Math.round(hi);
+      header.style.background = "linear-gradient(to bottom, " +
+        rgba(topColour) + " 0, " + rgba(topColour) + " " + edge + "px, " +
+        rgba(bottomColour) + " " + edge + "px, " + rgba(bottomColour) + " 100%)";
+    }
+
+    const mid = colourAt(h / 2);
+    const lum = (0.2126 * mid[0] + 0.7152 * mid[1] + 0.0722 * mid[2]) / 255;
+    const tone = lum > 0.5 ? "light" : (mid[0] > mid[1] + 35 ? "wine" : "dark");
+    header.dataset.tone = tone;
+    if (logo && logo.getAttribute("src") !== LOGOS[tone]) logo.setAttribute("src", LOGOS[tone]);
+
+    if (hero && document.body.classList.contains("home")) {
+      document.body.classList.toggle("past-hero", window.scrollY > hero.offsetHeight * 0.55);
+    }
+  }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(update);
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  window.addEventListener("load", update);
+  update();
+})();
+
+(function () {
+  const video = document.querySelector(".hero-image[data-mobile-src]");
+  if (!video || !window.matchMedia("(max-width: 700px) and (orientation: portrait)").matches) return;
+  const source = video.querySelector("source");
+  if (!source) return;
+  const original = source.getAttribute("src");
+  source.addEventListener("error", function () {
+    source.setAttribute("src", original);
+    video.load();
+  }, { once: true });
+  source.setAttribute("src", video.dataset.mobileSrc);
+  video.load();
+})();
 let heroTicking = false;
 
 function updateHeroFade() {

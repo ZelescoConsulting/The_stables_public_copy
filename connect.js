@@ -7,53 +7,204 @@ const CAL_LINKS = {
 
 const BOOKING_STYLE = "own";
 
-const CALENDLY_COLOURS = "background_color=2a292b&text_color=f4f0e9&primary_color=d9a441";
+const CALENDLY_COLOURS = "background_color=2a292b&text_color=e2d8ca&primary_color=c9a26b";
 
 const CAL_COLOURS = {
-  "cal-brand": "#d9a441",
-  "cal-brand-emphasis": "#c4912f",
+  "cal-brand": "#c9a26b",
+  "cal-brand-emphasis": "#b48d55",
   "cal-brand-text": "#2a292b",
-  "cal-text": "#f4f0e9",
+  "cal-text": "#e2d8ca",
   "cal-bg": "#2a292b",
   "cal-bg-booker": "#2a292b"
 };
 
-const tabs = document.querySelectorAll(".connect-tab");
-const panels = document.querySelectorAll(".connect-panel");
+const STUDIO = {
+  suburb: "Deepdene VIC 3103",
+  address: "",
+  opens: "10:00",
+  closes: "21:00",
 
-function showTab(name) {
-  tabs.forEach(function (tab) {
-    tab.setAttribute("aria-selected", tab.dataset.tab === name ? "true" : "false");
+  closedDates: ["2026-12-25", "2026-12-26", "2027-01-01", "2027-01-26"]
+};
+
+const VIEWS = {
+  tour:    { title: "Come and <em>see</em> us.", line: "place" },
+  space:   { title: "Find your <em>setting</em>.", line: "place" },
+  message: { title: "Say <em>hello</em>.", line: "reply" }
+};
+
+const viewBoxes = document.querySelectorAll(".cx-view");
+const titleBox = document.getElementById("cx-title");
+const infoBox = document.getElementById("cx-info");
+const lessMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let currentView = "tour";
+
+function infoLine(kind) {
+  if (kind === "reply") return "<span>We reply within two working days</span>";
+  let place = "";
+  if (STUDIO.address) {
+    const maps = "https://www.google.com/maps/search/?api=1&query=" +
+      encodeURIComponent("The Stables of Melbourne, " + STUDIO.address);
+    place = "<span>" + STUDIO.address + "</span>" +
+      '<a href="' + maps + '" target="_blank" rel="noopener">' +
+      '<span class="cx-line" aria-hidden="true"></span>Get directions</a>';
+  } else {
+    place = "<span>" + STUDIO.suburb + "</span><span>Address sent with your booking</span>";
+  }
+  return place + openNowHtml();
+}
+
+function showView(name, animate) {
+  if (!VIEWS[name]) name = "tour";
+  currentView = name;
+
+  viewBoxes.forEach(function (box) {
+    box.hidden = box.dataset.view !== name;
   });
-  panels.forEach(function (panel) {
-    panel.hidden = panel.id !== "panel-" + name;
+
+  document.querySelectorAll(".cx-option").forEach(function (option) {
+    if (option.dataset.view === name) option.setAttribute("aria-current", "true");
+    else option.removeAttribute("aria-current");
+    const label = option.querySelector(".cx-go-label");
+    if (label) label.textContent = option.dataset.view === name ? "You are here" : "Go";
   });
+
+  document.querySelectorAll(".cx-switch a").forEach(function (link) {
+    if (link.dataset.view === name) link.setAttribute("aria-current", "true");
+    else link.removeAttribute("aria-current");
+  });
+
+  const swap = function () {
+    titleBox.innerHTML = VIEWS[name].title;
+    infoBox.innerHTML = infoLine(VIEWS[name].line);
+    titleBox.classList.remove("is-changing");
+    infoBox.classList.remove("is-changing");
+  };
+
+  if (animate && !lessMotion) {
+    titleBox.classList.add("is-changing");
+    infoBox.classList.add("is-changing");
+    setTimeout(swap, 350);
+  } else {
+    swap();
+  }
+
   startCalendars();
 }
 
-tabs.forEach(function (tab) {
-  tab.addEventListener("click", function () {
-    showTab(tab.dataset.tab);
+function melbourneNow() {
+  const parts = {};
+  new Intl.DateTimeFormat("en-AU", {
+    timeZone: "Australia/Melbourne",
+    year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+  }).formatToParts(new Date()).forEach(function (p) { parts[p.type] = p.value; });
+  return {
+    date: parts.year + "-" + parts.month + "-" + parts.day,
+    minutes: Number(parts.hour) * 60 + Number(parts.minute)
+  };
+}
 
-    history.replaceState(null, "", "#" + tab.dataset.tab);
-    if (tab.dataset.tab === "enquire") openEnquiry();
+function shortTime(text) {
+  const parts = text.split(":").map(Number);
+  const h = parts[0] % 12 || 12;
+  return h + (parts[1] ? ":" + String(parts[1]).padStart(2, "0") : "") + (parts[0] < 12 ? "am" : "pm");
+}
+
+function openNowHtml() {
+  const now = melbourneNow();
+  const open = toMinutes(STUDIO.opens);
+  const close = toMinutes(STUDIO.closes);
+  const closedToday = STUDIO.closedDates.indexOf(now.date) !== -1;
+  let text, isOpen = false;
+
+  if (!closedToday && now.minutes >= open && now.minutes < close) {
+    isOpen = true;
+    text = "Open now &middot; until " + shortTime(STUDIO.closes);
+  } else if (!closedToday && now.minutes < open) {
+    text = "Closed &middot; opens " + shortTime(STUDIO.opens);
+  } else {
+    text = "Closed &middot; opens " + shortTime(STUDIO.opens) + " tomorrow";
+  }
+  return '<span class="cx-open' + (isOpen ? "" : " is-closed") + '">' +
+    '<span class="cx-dot" aria-hidden="true"></span>' + text + "</span>";
+}
+
+setInterval(function () {
+  if (VIEWS[currentView].line === "place") infoBox.innerHTML = infoLine("place");
+}, 60000);
+
+const moreButton = document.querySelector(".cx-more");
+const panel = document.getElementById("cx-options");
+const closeButton = panel ? panel.querySelector(".cx-close") : null;
+
+function openPanel() {
+  panel.hidden = false;
+  panel.getBoundingClientRect();
+  panel.classList.add("is-open");
+  document.body.classList.add("cx-panel-open");
+  moreButton.setAttribute("aria-expanded", "true");
+  setTimeout(function () {
+    const current = panel.querySelector('.cx-option[aria-current="true"]') ||
+                    panel.querySelector(".cx-option");
+    if (current) current.focus();
+  }, lessMotion ? 0 : 300);
+}
+
+function closePanel() {
+  panel.classList.remove("is-open");
+  document.body.classList.remove("cx-panel-open");
+  moreButton.setAttribute("aria-expanded", "false");
+  setTimeout(function () {
+    if (!panel.classList.contains("is-open")) panel.hidden = true;
+  }, lessMotion ? 0 : 700);
+  moreButton.focus({ preventScroll: true });
+}
+
+if (moreButton && panel) {
+  moreButton.addEventListener("click", openPanel);
+  closeButton.addEventListener("click", closePanel);
+
+  panel.querySelectorAll(".cx-option").forEach(function (option) {
+    option.addEventListener("click", function () {
+      const name = option.dataset.view;
+      if (name !== currentView) {
+        showView(name, true);
+        history.replaceState(null, "", "#" + (name === "message" ? "enquire" : name));
+      }
+      closePanel();
+    });
   });
-});
+
+  document.addEventListener("keydown", function (event) {
+    if (!panel.classList.contains("is-open")) return;
+    if (event.key === "Escape") closePanel();
+
+    if (event.key === "Tab") {
+      const items = panel.querySelectorAll("button");
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) { last.focus(); event.preventDefault(); }
+      else if (!event.shiftKey && document.activeElement === last) { first.focus(); event.preventDefault(); }
+    }
+  });
+}
 
 function openFromHash() {
   const hash = location.hash.replace("#", "");
-  if (!hash) return;
 
   if (hash.indexOf("space") === 0) {
-    showTab("space");
+    showView("space", true);
     const space = hash.split("-")[1];
     if (space) chooseSpace(space);
-  } else if (hash === "tour" || hash === "subscribe") {
-    showTab(hash);
-  } else if (hash === "enquire") {
-    showTab("enquire");
+  } else if (hash === "enquire" || hash === "message") {
+    showView("message", true);
     fillFromEvent();
-    openEnquiry();
+  } else if (hash === "tour") {
+    showView("tour", true);
+  } else if (hash === "subscribe") {
+    const strip = document.getElementById("subscribe");
+    if (strip) strip.scrollIntoView({ behavior: lessMotion ? "auto" : "smooth" });
   }
 }
 
@@ -119,42 +270,21 @@ spaceButtons.forEach(function (button) {
   });
 });
 
-const enquiryDialog = document.getElementById("enquiry-dialog");
 const enquiryForm = document.getElementById("enquiry-form");
 const enquiryDone = document.getElementById("enquiry-done");
-
-function openEnquiry() {
-  if (enquiryDialog && !enquiryDialog.open) enquiryDialog.showModal();
-}
-
-document.querySelectorAll("[data-open-enquiry]").forEach(function (button) {
-  button.addEventListener("click", openEnquiry);
-});
-
-document.querySelectorAll("[data-close-enquiry]").forEach(function (button) {
-  button.addEventListener("click", function () {
-    enquiryDialog.close();
-  });
-});
-
-if (enquiryDialog) {
-  enquiryDialog.addEventListener("click", function (event) {
-    if (event.target === enquiryDialog) enquiryDialog.close();
-  });
-
-  enquiryDialog.addEventListener("close", function () {
-    if (enquiryForm && enquiryForm.hidden) {
-      enquiryForm.reset();
-      enquiryForm.hidden = false;
-      enquiryDone.hidden = true;
-    }
-  });
-}
 
 function showEnquiryThanks() {
   enquiryForm.hidden = true;
   enquiryDone.hidden = false;
 }
+
+document.querySelectorAll("[data-new-message]").forEach(function (button) {
+  button.addEventListener("click", function () {
+    enquiryForm.reset();
+    enquiryForm.hidden = false;
+    enquiryDone.hidden = true;
+  });
+});
 
 if (enquiryForm) {
   enquiryForm.addEventListener("submit", function (event) {
@@ -716,5 +846,6 @@ const stillPreview = document.querySelectorAll(".booker:not(.is-live):not(.is-co
 const previewNotice = document.querySelector(".preview-notice");
 if (previewNotice && stillPreview === 0) previewNotice.hidden = true;
 
+showView(currentView, false);
 openFromHash();
 startCalendars();
