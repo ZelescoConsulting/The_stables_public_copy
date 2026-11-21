@@ -134,7 +134,7 @@ const hero = document.querySelector(".hero");
       logoTimer = setTimeout(function () {
         logo.setAttribute("src", src);
         logoTop.classList.remove("is-showing");
-      }, 700);
+      }, 300);
     };
     logoTop.setAttribute("src", src);
     if (logoTop.complete) logoTop.onload();

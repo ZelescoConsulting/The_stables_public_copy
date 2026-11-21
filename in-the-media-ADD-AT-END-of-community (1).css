@@ -1,0 +1,42 @@
+.studio-video {
+  color: var(--color-cream);
+  text-align: left;
+}
+
+.studio-video > * {
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.studio-video .eyebrow {
+  color: var(--color-gold);
+}
+
+.studio-video h2 {
+  color: var(--color-white);
+}
+
+.studio-video .video-frame {
+  margin-top: 2rem;
+}
+
+.studio-video .video-credit {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: rgba(226, 216, 202, 0.7);
+}
+
+.studio-video .button {
+  display: table;
+  margin-top: 2rem;
+  margin-left: max(0px, calc((100% - 1000px) / 2));
+  color: var(--color-white);
+  border: 1px solid var(--color-gold);
+  background-color: transparent;
+}
+
+.studio-video .button:hover {
+  background-color: var(--color-gold);
+  color: var(--color-ink);
+}

@@ -168,7 +168,7 @@
 
 .highlight-tagline {
   font-style: italic;
-  color: var(--color-muted);
+  color: var(--color-blush);
 }
 
 .testimonials {
@@ -1757,7 +1757,7 @@
   opacity: 1;
   visibility: visible;
   transform: none;
-  transition-delay: 1.3s;
+  transition-delay: 0s, 0s, 0s, 1.3s, 1.3s, 1.3s;
 }
 
 .js .home:not(.intro-done) .hero-title h1 {
@@ -1784,7 +1784,8 @@
 }
 
 .site-header {
-  transition: color 0.35s ease, opacity 0.3s ease, transform 0.5s ease, visibility 0.5s;
+    transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease,
+              opacity 0.5s ease, transform 0.5s ease, visibility 0.5s;
 }
 
 .site-header[data-tone="light"] {
@@ -1947,7 +1948,7 @@
 .site-header .main-nav a,
 .site-header .dropdown-toggle,
 .site-header .header-button {
-  transition: color 0.6s ease, background-color 0.6s ease, border-color 0.6s ease,
+  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease,
               opacity 0.5s ease, transform 0.5s ease, visibility 0.5s;
 }
 
@@ -2085,7 +2086,7 @@
   }
 
   .js .home:not(.past-hero) .nav-hero-only {
-    max-width: 12rem;
+    max-width: 30rem;
     opacity: 1;
     visibility: visible;
     transition: max-width 1s cubic-bezier(0.45, 0, 0.2, 1),
@@ -2126,4 +2127,47 @@
 .logo-image-top.is-showing {
   opacity: 1;
   transition: opacity 0.3s ease;
+}
+
+.studio-video {
+  color: var(--color-cream);
+  text-align: left;
+}
+
+.studio-video > * {
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.studio-video .eyebrow {
+  color: var(--color-gold);
+}
+
+.studio-video h2 {
+  color: var(--color-white);
+}
+
+.studio-video .video-frame {
+  margin-top: 2rem;
+}
+
+.studio-video .video-credit {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: rgba(226, 216, 202, 0.7);
+}
+
+.studio-video .button {
+  display: table;
+  margin-top: 2rem;
+  margin-left: max(0px, calc((100% - 1000px) / 2));
+  color: var(--color-white);
+  border: 1px solid var(--color-gold);
+  background-color: transparent;
+}
+
+.studio-video .button:hover {
+  background-color: var(--color-gold);
+  color: var(--color-ink);
 }
