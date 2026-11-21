@@ -88,6 +88,12 @@ function longDate(text) {
   });
 }
 
+function shortDate(text) {
+  return readDate(text).toLocaleDateString("en-AU", {
+    weekday: "short", day: "numeric", month: "short"
+  }).replace(",", "");
+}
+
 function shown(list) {
   return (list || []).filter(function (item) { return item && item.show !== false; });
 }
@@ -172,6 +178,14 @@ function fillHomeSpaces(spaces) {
   });
 }
 
+function eventShortDate(text) {
+  return readDate(text).toLocaleDateString("en-AU", {
+    weekday: "short", day: "numeric", month: "short"
+  }).replace(",", "");
+}
+
+const PHOTO_FOCUS = { left: "25%", centre: "50%", center: "50%", right: "75%" };
+
 function fillEventList(events) {
   const list = document.querySelector(".event-list");
   if (!list || !events) return;
@@ -182,29 +196,60 @@ function fillEventList(events) {
     return;
   }
 
-  list.innerHTML = items.map(function (e, i) {
+  list.classList.add("ev-list");
+
+  function card(e) {
+    const id = slug(e.title);
+    const title = esc(e.title);
+    const date = eventShortDate(e.date);
+    const focus = PHOTO_FOCUS[String(e.photo_focus || "").toLowerCase()] || "50%";
+
     return (
-      '<article class="event-item has-panel reveal" id="' + slug(e.title) + '"' + delay(i) + ">" +
-        '<div class="panel-media">' +
-          imgTag(e.photo, 900, e.photo_description) +
-          '<span class="event-date">' + esc(longDate(e.date)) + "</span>" +
-          '<div class="panel">' +
-            "<h3>About this event</h3>" +
-            "<p>" + esc(e.description) + "</p>" +
-            '<ul class="event-facts">' +
-              (e.time ? "<li><strong>Time</strong> " + esc(e.time) + "</li>" : "") +
-              (e.where ? "<li><strong>Where</strong> " + esc(e.where) + "</li>" : "") +
-              (e.cost ? "<li><strong>Cost</strong> " + esc(e.cost) + "</li>" : "") +
-            "</ul>" +
-            '<a href="' + registerLink(e.title) + '" class="button button-light">Register interest &rarr;</a>' +
+      '<article class="ev-card" id="' + id + '" style="--focus: ' + focus + '">' +
+
+        '<div class="ev-media reveal">' +
+          '<button type="button" class="ev-photo" aria-expanded="false"' +
+            ' aria-controls="' + id + '-details" aria-label="See more about ' + title + '">' +
+            imgTag(e.photo, 1200, e.photo_description) +
+            '<span class="ev-tone" aria-hidden="true"></span>' +
+            '<span class="ev-veil" aria-hidden="true"></span>' +
+            '<span class="ev-spine" aria-hidden="true">' + title + "</span>" +
+            '<span class="ev-more" aria-hidden="true"><span class="ev-line"></span>See more</span>' +
+          "</button>" +
+          '<div class="ev-caption">' +
+            "<h3>" + title + "</h3>" +
+            '<p class="ev-date">' + esc(date) + "</p>" +
           "</div>" +
         "</div>" +
-        "<h3>" + esc(e.title) + "</h3>" +
-        (e.host ? '<p class="event-meta">' + esc(e.host) + "</p>" : "") +
-        '<p class="hover-hint">Hover for details</p>' +
+
+        '<div class="ev-details" id="' + id + '-details" inert>' +
+          '<div class="ev-details-inner">' +
+            '<div class="ev-head">' +
+              "<h3>" + title + "</h3>" +
+              '<button type="button" class="ev-close"><span class="ev-line"></span>Close</button>' +
+            "</div>" +
+            (e.description ? '<p class="ev-about">' + esc(e.description) + "</p>" : "") +
+            '<ul class="ev-facts">' +
+              "<li><strong>When</strong> " + esc(date) + (e.time ? " &middot; " + esc(e.time) : "") + "</li>" +
+              (e.where ? "<li><strong>Where</strong> " + esc(e.where) + "</li>" : "") +
+              (e.host ? "<li><strong>Host</strong> " + esc(e.host) + "</li>" : "") +
+              (e.cost ? "<li><strong>Cost</strong> " + esc(e.cost) + "</li>" : "") +
+            "</ul>" +
+            '<a href="' + registerLink(e.title) + '" class="button button-dark">Register interest &rarr;</a>' +
+          "</div>" +
+        "</div>" +
       "</article>"
     );
-  }).join("");
+  }
+
+  let html = "";
+  for (let i = 0; i < items.length; i += 3) {
+    const row = items.slice(i, i + 3);
+    html += '<div class="ev-row">' + row.map(card).join("");
+    for (let n = row.length; n < 3; n++) html += '<div class="ev-spacer" aria-hidden="true"></div>';
+    html += "</div>";
+  }
+  list.innerHTML = html;
 }
 
 function fillAlbums(albums) {
