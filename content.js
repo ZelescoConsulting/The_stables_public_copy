@@ -106,8 +106,8 @@ function delay(i) {
 }
 
 function registerLink(title) {
-  return "mailto:lucia@zelesco.com?subject=" +
-    encodeURIComponent("Event registration: " + String(title).replace(/^\[|\]$/g, ""));
+  return "connect.html?event=" +
+    encodeURIComponent(String(title).replace(/^\[|\]$/g, "")) + "#enquire";
 }
 
 function load(name) {

@@ -1,13 +1,14 @@
 :root {
-  --color-cream: #f4f0e9;
-  --color-cream-dark: #ebe4da;
+  --color-cream: #e2d8ca;
+  --color-cream-dark: #d5c9b8;
   --color-ink: #2a292b;
-  --color-crimson: #8b1e48;
-  --color-gold: #d9a441;
-  --color-muted: #6e655d;
+  --color-crimson: #832630;
+  --color-gold: #c9a26b;
+  --color-muted: #57504a;
+  --color-clay: #d97e7a;
   --color-white: #ffffff;
-  --color-line: #d6ccbd;
-  --color-rust: #7a2e17;
+  --color-line: #d9b8a8;
+  --color-rust: var(--color-crimson);
 
   --font-heading: "Bodoni Moda", Georgia, serif;
   --font-body: "Jost", Arial, sans-serif;
@@ -31,7 +32,7 @@ html {
 }
 
 body {
-  background-color: var(--color-cream);
+  background-color: var(--color-clay);
   color: var(--color-ink);
   font-family: var(--font-body);
   font-weight: 300;
@@ -506,7 +507,7 @@ p {
 
 .next-event {
   padding: var(--section-space) var(--gutter);
-  background-color: var(--color-cream-dark);
+  background-color: var(--color-clay);
 }
 
 .featured-event {
@@ -725,7 +726,7 @@ p {
 .site-footer {
   padding: 5rem var(--gutter) 2rem;
   background-color: var(--color-ink);
-  color: var(--color-cream);
+  color: var(--color-cream-dark);
 }
 
 .footer-top {
@@ -1136,7 +1137,7 @@ details p {
   flex-direction: column;
   justify-content: center;
   padding: 2rem;
-  background-color: rgba(139, 30, 72, 0.94);
+  background-color: rgba(131, 38, 48, 0.94);;
   color: var(--color-white);
   transform: translateY(100%);
   transition: transform 0.5s ease;
@@ -1191,7 +1192,7 @@ details p {
   left: 1rem;
   z-index: 1;
   padding: 0.5rem 0.75rem;
-  background-color: var(--color-cream);
+  background-color: var(--color-clay);
   color: var(--color-ink);
   font-size: 0.68rem;
   font-weight: 500;
@@ -1388,7 +1389,7 @@ details p {
 }
 
 .lightbox-button:hover {
-  background-color: var(--color-white);
+  background-color: var(--color-clay);
   color: var(--color-ink);
 }
 

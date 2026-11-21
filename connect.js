@@ -52,8 +52,49 @@ function openFromHash() {
     showTab(hash);
   } else if (hash === "enquire") {
     showTab("enquire");
+    fillFromEvent();
     openEnquiry();
   }
+}
+
+const TOPIC_STARTERS = {
+  events:    { topic: "Events and workshops", subject: "Events enquiry",
+               message: "I have a question about your events." },
+  hosting:   { topic: "Events and workshops", subject: "Hosting an event",
+               message: "I'd like to host an event at The Stables." },
+  story:     { topic: "Sharing my story",     subject: "Sharing my story",
+               message: "I'd like to share my story." },
+  gallery:   { topic: "Collaborating with us", subject: "Gallery submission",
+               message: "I'd like to share my work for the gallery." },
+  privacy:   { topic: "Something else",       subject: "Privacy question",
+               message: "I have a question about privacy." },
+  terms:     { topic: "Something else",       subject: "Question about the terms",
+               message: "I have a question about the terms of use." }
+};
+
+function fillFromEvent() {
+  if (!enquiryForm) return;
+  const params = new URLSearchParams(location.search);
+  const eventName = params.get("event");
+  let start = TOPIC_STARTERS[params.get("topic")];
+
+  if (eventName) {
+    start = {
+      topic: "Events and workshops",
+      subject: "Event interest: " + eventName,
+      message: "I'd like to register my interest in: " + eventName + "."
+    };
+  }
+  if (!start) return;
+
+  const topic = enquiryForm.elements.topic;
+  if (topic) topic.value = start.topic;
+
+  const message = enquiryForm.elements.message;
+  if (message && !message.value) message.value = start.message + "\n\n";
+
+  const subject = enquiryForm.elements.subject;
+  if (subject) subject.value = start.subject + " (The Stables website)";
 }
 
 window.addEventListener("hashchange", openFromHash);
