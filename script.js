@@ -46,7 +46,7 @@ const hero = document.querySelector(".hero");
     const dy = (to.top + to.height / 2) - (from.top + from.height / 2);
     seal.style.animation = "none";
     seal.getBoundingClientRect();
-    seal.style.transform = "translate(" + dx + "px, " + dy + "px) scale(" + (to.width / from.width) + ")";
+    seal.style.transform = "translate(" + dx + "px, " + dy + "px)";
 
     body.classList.add("intro-done");
 
@@ -87,7 +87,8 @@ const hero = document.querySelector(".hero");
   const LOGOS = {
     dark: "images/logo.png",
     wine: "images/logo-wine.png",
-    light: "images/logo-light.png"
+    light: "images/logo-light.png",
+    blush: "images/logo-blush.png",
   };
   Object.keys(LOGOS).forEach(function (k) { new Image().src = LOGOS[k]; });
 
@@ -104,9 +105,24 @@ const hero = document.querySelector(".hero");
     }
     return [223, 192, 182];
   }
-
+let logoTimer = null;
+  function swapLogo(src) {
+    if (!logo || logo.dataset.want === src) return;
+    logo.dataset.want = src;
+    if (!logo.getAttribute("data-want-init")) {
+      logo.setAttribute("data-want-init", "1");
+      logo.setAttribute("src", src);
+      return;
+    }
+    clearTimeout(logoTimer);
+    logo.classList.add("is-swapping");
+    logoTimer = setTimeout(function () {
+      logo.setAttribute("src", src);
+      logo.classList.remove("is-swapping");
+    }, 250);
+  }
   function same(a, b) { return a[0] === b[0] && a[1] === b[1] && a[2] === b[2]; }
-  function rgba(c) { return "rgba(" + c.join(", ") + ", 0.94)"; }
+  function rgba(c) { return "rgba(" + c.join(", ") + ", 0.70)"; }
 
   let ticking = false;
   function update() {
@@ -133,7 +149,8 @@ const hero = document.querySelector(".hero");
     const lum = (0.2126 * mid[0] + 0.7152 * mid[1] + 0.0722 * mid[2]) / 255;
     const tone = lum > 0.5 ? "light" : (mid[0] > mid[1] + 35 ? "wine" : "dark");
     header.dataset.tone = tone;
-    if (logo && logo.getAttribute("src") !== LOGOS[tone]) logo.setAttribute("src", LOGOS[tone]);
+     const logoKey = (tone === "light" && mid[0] - mid[2] > 32) ? "blush" : tone;
+    swapLogo(LOGOS[logoKey]);
 
     if (hero && document.body.classList.contains("home")) {
       document.body.classList.toggle("past-hero", window.scrollY > hero.offsetHeight * 0.55);
