@@ -112,7 +112,7 @@ function delay(i) {
 }
 
 function registerLink(title) {
-  return "connect.html?event=" +
+  return "connect?event=" +
     encodeURIComponent(String(title).replace(/^\[|\]$/g, "")) + "#enquire";
 }
 
@@ -159,7 +159,7 @@ function fillHomeEvents(events) {
           (facts ? "<p>" + facts + "</p>" : "") +
           '<div class="featured-actions">' +
             '<a href="' + registerLink(e.title) + '" class="button button-dark">Register interest &rarr;</a>' +
-            '<a href="events.html#' + slug(e.title) + '" class="text-link">Event details &rarr;</a>' +
+            '<a href="events#' + slug(e.title) + '" class="text-link">Event details &rarr;</a>' +
           "</div>" +
         "</div>" +
       "</article>"
@@ -170,7 +170,7 @@ function fillHomeEvents(events) {
 function fillHomeSpaces(spaces) {
   if (!spaces) return;
   ["house", "stables", "garden"].forEach(function (key) {
-    const panel = document.querySelector('.space-panel[href="spaces.html#' + key + '"]');
+    const panel = document.querySelector('.space-panel[href="spaces#' + key + '"]');
     const s = spaces[key];
     if (!panel || !s) return;
     if (s.photo) panel.querySelector("img").outerHTML = imgTag(s.photo, 1200, s.photo_description);
