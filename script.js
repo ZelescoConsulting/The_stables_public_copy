@@ -4,7 +4,7 @@ const header = document.querySelector(".site-header");
 const hero = document.querySelector(".hero");
 
 (function () {
-  const INTRO_TIME = 1000;
+  const INTRO_TIME = 2500;
   const EVERY_VISIT = true;
 
   const body = document.body;
