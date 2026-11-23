@@ -2,14 +2,12 @@
   "golden_child": {
     "month": "[Month]",
     "name": "[Name]",
-    "photo": "https://images.pexels.com/photos/40225562/pexels-photo-40225562.jpeg?auto=compress&cs=tinysrgb&w=900",
     "photo_description": "portrait against red velvet",
     "story": "[Two or three lines about this person, and why they're being celebrated.]",
     "show": true
   },
   "misfit_spotlight": {
-    "name": "[Name]",
-    "photo": "https://images.pexels.com/photos/6567356/pexels-photo-6567356.jpeg?auto=compress&cs=tinysrgb&w=900",
+    "name": "Testing",
     "photo_description": "studio interior",
     "story": "[Two or three lines from their story.]",
     "show": true
@@ -25,6 +23,5 @@
       "credit": "[First name]",
       "show": true
     }
-  ],
-  "community_stories": []
+  ]
 }
