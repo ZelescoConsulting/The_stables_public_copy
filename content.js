@@ -124,10 +124,7 @@ function load(name) {
 
 function fillSite(site) {
   if (!site) return;
-  if (site.crest) {
-    const src = photoUrl(site.crest, 900).replace(/"/g, "%22");
-    document.documentElement.style.setProperty("--crest", 'url("' + src + '")');
-  }
+  if (site.crest) useCrest(photoUrl(site.crest, 900));
   if (site.name) {
     document.querySelectorAll(".brand-name").forEach(function (el) { el.textContent = site.name; });
     document.querySelectorAll(".brand[aria-label]").forEach(function (el) {
@@ -136,6 +133,105 @@ function fillSite(site) {
   }
   const art = document.querySelector(".cx-horse");
   if (art && site.contact_art) setPhoto(art, site.contact_art, 900);
+}
+
+const CREST_MAX_WIDTH = 900;
+const CREST_TOLERANCE = 18;
+
+function setCrest(url) {
+  document.documentElement.style.setProperty("--crest", 'url("' + url.replace(/"/g, "%22") + '")');
+}
+
+function useCrest(src) {
+  const root = document.documentElement;
+  let remembered = null;
+  try { remembered = sessionStorage.getItem("crest:" + src); } catch (e) {  }
+  if (remembered) { setCrest(remembered); return; }
+
+  root.classList.add("crest-loading");
+  const done = function (url) {
+    setCrest(url);
+    root.classList.remove("crest-loading");
+  };
+  const giveUp = window.setTimeout(function () { done(src); }, 4000);
+
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = function () {
+    window.clearTimeout(giveUp);
+    let url = src;
+    try {
+      url = seeThroughCrest(img) || src;
+      if (url !== src) sessionStorage.setItem("crest:" + src, url);
+    } catch (e) {  }
+    done(url);
+  };
+  img.onerror = function () { window.clearTimeout(giveUp); done(src); };
+  img.src = src;
+}
+
+function seeThroughCrest(img) {
+  const scale = Math.min(1, CREST_MAX_WIDTH / img.naturalWidth);
+  const w = Math.max(1, Math.round(img.naturalWidth * scale));
+  const h = Math.max(1, Math.round(img.naturalHeight * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0, w, h);
+  const data = ctx.getImageData(0, 0, w, h);
+  const px = data.data;
+
+  let clear = 0;
+  for (let i = 3; i < px.length; i += 16) if (px[i] < 200) clear++;
+  if (clear > px.length / 16 * 0.05) return null;
+
+  const patch = Math.max(2, Math.round(Math.min(w, h) * 0.03));
+  const bg = [0, 0, 0];
+  let n = 0;
+  [[0, 0], [w - patch, 0], [0, h - patch], [w - patch, h - patch]].forEach(function (c) {
+    for (let y = c[1]; y < c[1] + patch; y++) {
+      for (let x = c[0]; x < c[0] + patch; x++) {
+        const i = (y * w + x) * 4;
+        bg[0] += px[i]; bg[1] += px[i + 1]; bg[2] += px[i + 2]; n++;
+      }
+    }
+  });
+  bg[0] /= n; bg[1] /= n; bg[2] /= n;
+
+  const far = new Float32Array(w * h);
+  let farthest = 0;
+  for (let p = 0; p < w * h; p++) {
+    const i = p * 4;
+    const d = Math.max(Math.abs(px[i] - bg[0]), Math.abs(px[i + 1] - bg[1]), Math.abs(px[i + 2] - bg[2]));
+    far[p] = d;
+    if (d > farthest) farthest = d;
+  }
+  if (farthest <= CREST_TOLERANCE) return null;
+
+  const solidAt = CREST_TOLERANCE + (farthest - CREST_TOLERANCE) * 0.45;
+  let top = h, bottom = -1, left = w, right = -1;
+  for (let p = 0; p < w * h; p++) {
+    const a = Math.round(255 * Math.min(1, Math.max(0, (far[p] - CREST_TOLERANCE) / (solidAt - CREST_TOLERANCE))));
+    px[p * 4 + 3] = a;
+    if (a > 24) {
+      const x = p % w, y = (p - x) / w;
+      if (y < top) top = y;
+      if (y > bottom) bottom = y;
+      if (x < left) left = x;
+      if (x > right) right = x;
+    }
+  }
+  ctx.putImageData(data, 0, 0);
+
+  const pad = Math.round(Math.max(w, h) * 0.02);
+  left = Math.max(0, left - pad); top = Math.max(0, top - pad);
+  right = Math.min(w - 1, right + pad); bottom = Math.min(h - 1, bottom + pad);
+  const out = document.createElement("canvas");
+  out.width = right - left + 1;
+  out.height = bottom - top + 1;
+  out.getContext("2d").drawImage(canvas, left, top, out.width, out.height, 0, 0, out.width, out.height);
+  return out.toDataURL("image/png");
 }
 
 function fillHomePhotos(home) {
