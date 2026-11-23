@@ -4,99 +4,17 @@ const header = document.querySelector(".site-header");
 const hero = document.querySelector(".hero");
 
 (function () {
-  const INTRO_TIME = 2500;
-  const EVERY_VISIT = true;
-
-  const body = document.body;
-  if (!body.classList.contains("home")) return;
-
-  const intro = document.querySelector(".hero-intro");
-  const seal = intro ? intro.querySelector(".intro-seal") : null;
-  const ring = seal ? seal.querySelector(".intro-ring") : null;
-  const crest = document.querySelector(".hero-crest");
-  if (!intro || !seal || !crest) { body.classList.add("intro-done", "intro-skip"); return; }
-
-  const skipEvents = ["click", "keydown", "wheel", "touchstart"];
-  let timer = null;
-
-  function restInCrest() {
-    seal.style.transform = "";
-    seal.style.animation = "";
-    crest.appendChild(seal);
-    intro.hidden = true;
-  }
-
-  function finish() {
-    if (body.classList.contains("intro-done")) return;
-    clearTimeout(timer);
-    skipEvents.forEach(function (name) { window.removeEventListener(name, finish); });
-    try { sessionStorage.setItem("stables-intro", "seen"); } catch (e) {}
-
-    const m = new DOMMatrix(getComputedStyle(ring).transform);
-    const angle = Math.atan2(m.b, m.a) * 180 / Math.PI;
-    ring.style.animation = "none";
-    ring.style.transform = "rotate(" + angle + "deg)";
-    ring.getBoundingClientRect();
-    ring.style.transition = "transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.9s ease 0.3s";
-    ring.style.transform = "rotate(" + (angle + 70) + "deg)";
-
-    const from = seal.getBoundingClientRect();
-    const to = crest.getBoundingClientRect();
-    const dx = (to.left + to.width / 2) - (from.left + from.width / 2);
-    const dy = (to.top + to.height / 2) - (from.top + from.height / 2);
-    seal.style.animation = "none";
-    seal.getBoundingClientRect();
-    seal.style.transform = "translate(" + dx + "px, " + dy + "px)";
-
-    body.classList.add("intro-done");
-
-    setTimeout(restInCrest, 1600);
-  }
-
-  function start() {
-    let seen = false;
-    try { seen = sessionStorage.getItem("stables-intro") === "seen"; } catch (e) {}
-
-    if (prefersLessMotion || (!EVERY_VISIT && seen)) {
-      body.classList.add("intro-done", "intro-skip");
-      restInCrest();
-      return;
-    }
-    timer = setTimeout(finish, INTRO_TIME);
-    skipEvents.forEach(function (name) {
-      window.addEventListener(name, finish, { passive: true });
-    });
-  }
-
-  start();
-
-  window.addEventListener("pageshow", function (event) {
-    if (!event.persisted || !EVERY_VISIT || prefersLessMotion) return;
-    body.classList.remove("intro-done", "intro-skip");
-    ring.style.cssText = "";
-    seal.style.cssText = "";
-    intro.querySelector(".intro-seal") || intro.appendChild(seal);
-    intro.hidden = false;
-    start();
-  });
-})();
-
-(function () {
   if (!header) return;
-  const logo = header.querySelector(".logo-image");
-  const LOGOS = {
-    dark: "images/logo.png",
-    wine: "images/logo-wine.png",
-    light: "images/logo-light.png",
-    blush: "images/logo-blush.png",
-  };
-  Object.keys(LOGOS).forEach(function (k) { new Image().src = LOGOS[k]; });
+  const body = document.body;
+  const isHome = body.classList.contains("home");
 
   function colourAt(y) {
     const stack = document.elementsFromPoint(window.innerWidth / 2, y);
     for (let i = 0; i < stack.length; i++) {
       let el = stack[i];
-      if (header.contains(el)) continue;
+      if (header.contains(el) || el.closest(".brand-movers")) continue;
+
+      if (el.getBoundingClientRect().width < 60) continue;
       while (el && el !== document.documentElement) {
         const m = getComputedStyle(el).backgroundColor.match(/[\d.]+/g);
         if (m && (m.length < 4 || Number(m[3]) > 0.5)) return m.slice(0, 3).map(Number);
@@ -105,40 +23,6 @@ const hero = document.querySelector(".hero");
     }
     return [223, 192, 182];
   }
- let logoTimer = null;
-  let logoTop = null;
-  function swapLogo(src) {
-    if (!logo || logo.dataset.want === src) return;
-    logo.dataset.want = src;
-
-    if (!logoTop) {
-      logo.setAttribute("src", src);
-      logoTop = logo.cloneNode();
-      logoTop.removeAttribute("data-want");
-      logoTop.className = "logo-image logo-image-top";
-      logoTop.alt = "";
-      logoTop.setAttribute("aria-hidden", "true");
-      logo.parentNode.appendChild(logoTop);
-      return;
-    }
-
-    clearTimeout(logoTimer);
-    if (logoTop.classList.contains("is-showing")) {
-      logo.setAttribute("src", logoTop.getAttribute("src"));
-    }
-    logoTop.classList.remove("is-showing");
-    logoTop.onload = function () {
-      logoTop.onload = null;
-      logoTop.getBoundingClientRect();
-      logoTop.classList.add("is-showing");
-      logoTimer = setTimeout(function () {
-        logo.setAttribute("src", src);
-        logoTop.classList.remove("is-showing");
-      }, 300);
-    };
-    logoTop.setAttribute("src", src);
-    if (logoTop.complete) logoTop.onload();
-  }
 
   function same(a, b) { return a[0] === b[0] && a[1] === b[1] && a[2] === b[2]; }
   function rgba(c) { return "rgba(" + c.join(", ") + ", 0.70)"; }
@@ -146,11 +30,19 @@ const hero = document.querySelector(".hero");
   let ticking = false;
   function update() {
     ticking = false;
+
+    if (document.documentElement.classList.contains("menu-open")) return;
+
+    const overHero = isHome && hero && window.scrollY < window.innerHeight * 0.5;
+    body.classList.toggle("over-hero", overHero);
+
     const h = header.offsetHeight;
     const topColour = colourAt(1);
     const bottomColour = colourAt(h - 1);
 
-    if (same(topColour, bottomColour)) {
+    if (overHero) {
+      header.style.background = "";
+    } else if (same(topColour, bottomColour)) {
       header.style.background = rgba(topColour);
     } else {
       let lo = 1, hi = h - 1;
@@ -164,16 +56,9 @@ const hero = document.querySelector(".hero");
         rgba(bottomColour) + " " + edge + "px, " + rgba(bottomColour) + " 100%)";
     }
 
-    const mid = colourAt(h / 2);
+    const mid = overHero ? [42, 41, 43] : colourAt(h / 2);
     const lum = (0.2126 * mid[0] + 0.7152 * mid[1] + 0.0722 * mid[2]) / 255;
-    const tone = lum > 0.5 ? "light" : (mid[0] > mid[1] + 35 ? "wine" : "dark");
-    header.dataset.tone = tone;
-     const logoKey = (tone === "light" && mid[0] - mid[2] > 32) ? "blush" : tone;
-    swapLogo(LOGOS[logoKey]);
-
-    if (hero && document.body.classList.contains("home")) {
-      document.body.classList.toggle("past-hero", window.scrollY > hero.offsetHeight * 0.55);
-    }
+    header.dataset.tone = lum > 0.5 ? "light" : (mid[0] > mid[1] + 35 ? "wine" : "dark");
   }
   function onScroll() {
     if (ticking) return;
@@ -184,6 +69,174 @@ const hero = document.querySelector(".hero");
   window.addEventListener("resize", onScroll);
   window.addEventListener("load", update);
   update();
+})();
+
+function fitBrandNames() {
+  document.querySelectorAll(".site-header .brand-name, .hero-name").forEach(function (el) {
+    el.style.fontSize = "";
+    let size = parseFloat(getComputedStyle(el).fontSize);
+    const smallest = size * 0.5;
+
+    const room = function () {
+      return el.classList.contains("hero-name") ? window.innerWidth * 0.92 : el.clientWidth;
+    };
+    while (el.scrollWidth > room() + 1 && size > smallest) {
+      size = size * 0.95;
+      el.style.fontSize = size.toFixed(1) + "px";
+    }
+  });
+}
+fitBrandNames();
+window.addEventListener("load", fitBrandNames);
+window.addEventListener("resize", fitBrandNames);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitBrandNames);
+
+(function () {
+  const MOVE_DISTANCE = 0.6;
+
+  const body = document.body;
+  if (!body.classList.contains("home") || !header || prefersLessMotion) return;
+  const seal = document.querySelector(".hero-seal");
+  const name = document.querySelector(".hero-name");
+  const toSeal = header.querySelector(".brand-seal");
+  const toName = header.querySelector(".brand-name");
+  const shell = document.querySelector(".page-shell");
+  if (!seal || !name || !toSeal || !toName || !shell) return;
+
+  const layer = document.createElement("div");
+  layer.className = "brand-movers";
+  layer.setAttribute("aria-hidden", "true");
+  const moveSeal = document.createElement("span");
+  moveSeal.className = "brand-seal brand-mover";
+  moveSeal.innerHTML = '<span class="brand-crest"></span>';
+  const moveName = document.createElement("span");
+  moveName.className = "brand-name brand-mover";
+  layer.appendChild(moveSeal);
+  layer.appendChild(moveName);
+  shell.appendChild(layer);
+  body.classList.add("brand-moving");
+
+  function place(el, from, to, p) {
+    const scale = 1 + (to.width / from.width - 1) * p;
+    const x = from.left + (to.left - from.left) * p;
+    const fromMiddle = from.top + from.height / 2;
+    const toMiddle = to.top + to.height / 2;
+    const y = fromMiddle + (toMiddle - fromMiddle) * p - (from.height * scale) / 2;
+    el.style.width = from.width + "px";
+    el.style.height = from.height + "px";
+    el.style.transform = "translate(" + x.toFixed(1) + "px, " + y.toFixed(1) + "px) scale(" + scale.toFixed(4) + ")";
+  }
+
+  let ticking = false;
+  function update() {
+    ticking = false;
+    if (document.documentElement.classList.contains("menu-open")) return;
+
+    if (moveName.textContent !== name.textContent) moveName.textContent = name.textContent;
+    moveName.style.fontSize = getComputedStyle(name).fontSize;
+
+    const raw = Math.min(1, Math.max(0, window.scrollY / (window.innerHeight * MOVE_DISTANCE)));
+    const p = raw * raw * (3 - 2 * raw);
+    place(moveSeal, seal.getBoundingClientRect(), toSeal.getBoundingClientRect(), p);
+    place(moveName, name.getBoundingClientRect(), toName.getBoundingClientRect(), p);
+    body.classList.toggle("brand-arrived", raw >= 0.995);
+  }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(update);
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  window.addEventListener("load", update);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(update);
+  update();
+})();
+
+(function () {
+  const PAGE_GAP = 48;
+  const TRANSITION_MS = 700;
+
+  const menu = document.getElementById("site-menu");
+  const shell = document.querySelector(".page-shell");
+  const toggle = document.querySelector(".menu-toggle");
+  if (!menu || !shell || !toggle) return;
+  const closeButton = menu.querySelector(".menu-close");
+  const root = document.documentElement;
+  const phone = window.matchMedia("(max-width: 700px)");
+  let isOpen = false;
+  let closingTimer = null;
+
+  function measure() {
+    const panel = menu.getBoundingClientRect().width;
+    const width = window.innerWidth;
+    const scale = Math.min(0.62, Math.max(0.3, (width - panel - PAGE_GAP * 2) / width));
+    root.style.setProperty("--menu-scale", scale.toFixed(4));
+    root.style.setProperty("--menu-x", PAGE_GAP + "px");
+    root.style.setProperty("--menu-ty", ((window.innerHeight * (1 - scale)) / 2).toFixed(1) + "px");
+  }
+
+  function open() {
+    if (isOpen) return;
+    isOpen = true;
+    clearTimeout(closingTimer);
+    root.classList.remove("menu-closing");
+    root.style.setProperty("--menu-y", window.scrollY + "px");
+
+    root.style.setProperty("--page-bg", getComputedStyle(document.body).backgroundColor);
+    if (!phone.matches) measure();
+    root.classList.add("menu-open");
+    toggle.setAttribute("aria-expanded", "true");
+    menu.inert = false;
+    shell.inert = true;
+    window.setTimeout(function () { closeButton.focus(); }, 60);
+  }
+
+  function close(thenGo) {
+    if (!isOpen) return;
+    isOpen = false;
+    root.classList.remove("menu-open");
+    root.classList.add("menu-closing");
+    toggle.setAttribute("aria-expanded", "false");
+    menu.inert = true;
+    shell.inert = false;
+    toggle.focus({ preventScroll: true });
+    closingTimer = window.setTimeout(function () {
+      root.classList.remove("menu-closing");
+      if (thenGo) thenGo();
+    }, phone.matches ? 400 : TRANSITION_MS);
+  }
+
+  toggle.addEventListener("click", open);
+  closeButton.addEventListener("click", function () { close(); });
+
+  document.addEventListener("click", function (event) {
+    if (isOpen && !menu.contains(event.target)) {
+      event.preventDefault();
+      close();
+    }
+  }, true);
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && isOpen) close();
+  });
+
+  menu.addEventListener("click", function (event) {
+    const link = event.target.closest("a[href]");
+    if (!link || link.target === "_blank") return;
+    const here = location.href.split("#")[0];
+    const there = link.href.split("#")[0];
+    if (here !== there) return;
+    event.preventDefault();
+    close(function () {
+      if (link.hash) location.hash = link.hash;
+    });
+  });
+
+  window.addEventListener("resize", function () {
+    if (isOpen && !phone.matches) measure();
+  });
+  phone.addEventListener("change", function () { if (isOpen) close(); });
 })();
 
 (function () {

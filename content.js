@@ -122,6 +122,22 @@ function load(name) {
     .catch(function () { return null; });
 }
 
+function fillSite(site) {
+  if (!site) return;
+  if (site.crest) {
+    const src = photoUrl(site.crest, 900).replace(/"/g, "%22");
+    document.documentElement.style.setProperty("--crest", 'url("' + src + '")');
+  }
+  if (site.name) {
+    document.querySelectorAll(".brand-name").forEach(function (el) { el.textContent = site.name; });
+    document.querySelectorAll(".brand[aria-label]").forEach(function (el) {
+      el.setAttribute("aria-label", site.name + ", home");
+    });
+  }
+  const art = document.querySelector(".cx-horse");
+  if (art && site.contact_art) setPhoto(art, site.contact_art, 900);
+}
+
 function fillHomePhotos(home) {
   if (!home) return;
 
@@ -433,6 +449,7 @@ function fillStories(stories) {
   const thenLoad = ((thisScript && thisScript.dataset.then) || "").split(/\s+/).filter(Boolean);
 
   const needs = {
+    site: !!document.querySelector(".brand, .cx-horse"),
     home: !!document.querySelector(".hero"),
     events: !!document.querySelector(".next-event, .event-list"),
     albums: !!document.querySelector(".album-grid"),
@@ -449,6 +466,7 @@ function fillStories(stories) {
     names.forEach(function (n, i) { data[n] = results[i]; });
 
     [
+      function () { fillSite(data.site); },
       function () { fillHomePhotos(data.home); },
       function () { fillHomeEvents(data.events); },
       function () { fillHomeSpaces(data.spaces); },

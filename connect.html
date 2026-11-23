@@ -24,7 +24,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Lato:wght@300;400;700&family=WindSong:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Lato:wght@300;400;700&family=WindSong:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="community.css">
@@ -36,37 +36,19 @@
 
 <body class="connect-page">
 
+  <div class="page-shell">
+
   <header class="site-header">
-    <a href="/" class="logo">
-      <img src="images/logo.png" alt="The Stables of Melbourne" class="logo-image">
+
+    <a href="/" class="brand" aria-label="The Stables of Melbourne, home">
+      <span class="brand-seal" aria-hidden="true"><span class="brand-crest"></span></span>
+      <span class="brand-name">The Stables of Melbourne</span>
     </a>
 
-    <nav class="main-nav">
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="about">About</a></li>
-        <li><a href="spaces">Spaces &amp; Rates</a></li>
-        <li><a href="events">What's On</a></li>
-        <li class="has-dropdown">
-          <a href="gallery">Gallery</a>
-          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-label="More in Gallery">&#9662;</button>
-          <ul class="dropdown">
-            <li><a href="gallery">Collections</a></li>
-            <li><a href="stories">Stories</a></li>
-          </ul>
-        </li>
-      </ul>
-    </nav>
-
-    <div class="has-dropdown header-cta">
-      <a href="connect" class="button button-light header-button">Get in touch &rarr;</a>
-      <button class="dropdown-toggle" type="button" aria-expanded="false" aria-label="Ways to get in touch">&#9662;</button>
-      <ul class="dropdown dropdown-described">
-        <li><a href="connect#tour">Book a tour<span>30 or 45 minutes with Lucia</span></a></li>
-        <li><a href="connect#space">Hire a space<span>The House, the Stables or the Garden</span></a></li>
-        <li><a href="connect#enquire">Send a message<span>Questions, events and collaborations</span></a></li>
-      </ul>
-    </div>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+      <span class="menu-toggle-label">Menu</span>
+      <span class="menu-toggle-lines" aria-hidden="true"><span></span><span></span></span>
+    </button>
   </header>
 
   <main>
@@ -340,12 +322,47 @@
       <p><a href="privacy">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="terms">Terms &amp; Conditions</a></p>
     </div>
   </footer>
+  </div>
 
-  <script src="script.js">
-</script>
-  <script src="community.js">
-</script>
-  <script src="connect.js">
+  <aside class="site-menu" id="site-menu" aria-label="Site menu" inert>
+    <div class="site-menu-top">
+      <p class="site-menu-label">Menu</p>
+      <button class="menu-close" type="button" aria-label="Close menu">Close <span aria-hidden="true">&times;</span></button>
+    </div>
+
+    <nav class="site-menu-nav" aria-label="Main">
+      <ol>
+        <li><a href="/"><span class="menu-num">01</span>Home</a></li>
+        <li><a href="about"><span class="menu-num">02</span>About</a></li>
+        <li><a href="spaces"><span class="menu-num">03</span>Spaces &amp; Rates</a></li>
+        <li><a href="events"><span class="menu-num">04</span>What&rsquo;s On</a></li>
+        <li><a href="gallery"><span class="menu-num">05</span>Gallery</a></li>
+        <li><a href="stories"><span class="menu-num">06</span>Stories</a></li>
+      </ol>
+    </nav>
+
+    <a href="connect" class="menu-cta">Get in touch &rarr;</a>
+
+    <div class="site-menu-extra">
+      <div>
+        <p class="site-menu-label">Book &amp; connect</p>
+        <ul>
+          <li><a href="connect#tour">Book a tour</a></li>
+          <li><a href="connect#space">Hire a space</a></li>
+          <li><a href="connect#enquire">Send a message</a></li>
+          <li><a href="connect#subscribe">Join the mailing list</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="site-menu-label">Visit</p>
+        <p>Deepdene VIC 3103</p>
+        <p>Open daily, 10am&ndash;9pm</p>
+        <p><a href="https://www.instagram.com/the_stables_of_melbourne/" target="_blank" rel="noopener">Instagram</a></p>
+      </div>
+    </div>
+  </aside>
+
+  <script src="content.js" data-then="script.js community.js connect.js">
 </script>
 
 </body>
