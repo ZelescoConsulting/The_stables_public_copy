@@ -96,22 +96,16 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitBrandNa
 
   const body = document.body;
   if (!body.classList.contains("home") || !header || prefersLessMotion) return;
-  const seal = document.querySelector(".hero-seal");
   const name = document.querySelector(".hero-name");
-  const toSeal = header.querySelector(".brand-seal");
   const toName = header.querySelector(".brand-name");
   const shell = document.querySelector(".page-shell");
-  if (!seal || !name || !toSeal || !toName || !shell) return;
+  if (!name || !toName || !shell) return;
 
   const layer = document.createElement("div");
   layer.className = "brand-movers";
   layer.setAttribute("aria-hidden", "true");
-  const moveSeal = document.createElement("span");
-  moveSeal.className = "brand-seal brand-mover";
-  moveSeal.innerHTML = '<span class="brand-crest"></span>';
   const moveName = document.createElement("span");
   moveName.className = "brand-name brand-mover";
-  layer.appendChild(moveSeal);
   layer.appendChild(moveName);
   shell.appendChild(layer);
   body.classList.add("brand-moving");
@@ -137,7 +131,6 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitBrandNa
 
     const raw = Math.min(1, Math.max(0, window.scrollY / (window.innerHeight * MOVE_DISTANCE)));
     const p = raw * raw * (3 - 2 * raw);
-    place(moveSeal, seal.getBoundingClientRect(), toSeal.getBoundingClientRect(), p);
     place(moveName, name.getBoundingClientRect(), toName.getBoundingClientRect(), p);
     body.classList.toggle("brand-arrived", raw >= 0.995);
   }
