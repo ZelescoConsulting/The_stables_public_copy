@@ -218,7 +218,7 @@ p {
   color: var(--color-white);
   background-color: rgba(42, 41, 43, 0.92);
   backdrop-filter: blur(10px);
-  transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
 }
 
 .logo {
@@ -282,7 +282,7 @@ p {
   position: absolute;
   inset: 0;
   background-color: var(--color-ink);
-  opacity: calc(0.7 + var(--fade, 0) * 0.3);
+  opacity: calc(0.8 + var(--fade, 0) * 0.2);
 }
 
 .hero-title {
