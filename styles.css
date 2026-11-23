@@ -282,7 +282,7 @@ p {
   position: absolute;
   inset: 0;
   background-color: var(--color-ink);
-  opacity: calc(0.45 + var(--fade, 0) * 0.55);
+  opacity: calc(0.7 + var(--fade, 0) * 0.3);
 }
 
 .hero-title {
