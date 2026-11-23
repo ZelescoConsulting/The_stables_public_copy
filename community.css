@@ -581,8 +581,8 @@ html.menu-open .site-menu {
 }
 
 .home .hero::after {
-  -webkit-backdrop-filter: blur(4px);
-          backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
 }
 
 .hero {
