@@ -2,12 +2,14 @@
   "golden_child": {
     "month": "[Month]",
     "name": "[Name]",
+    "photo": "/images/uploads/2026-11-2318-071.jpg",
     "photo_description": "portrait against red velvet",
     "story": "[Two or three lines about this person, and why they're being celebrated.]",
     "show": true
   },
   "misfit_spotlight": {
     "name": "Testing",
+    "photo": "/images/uploads/2026-11-2318-07.jpg",
     "photo_description": "studio interior",
     "story": "[Two or three lines from their story.]",
     "show": true
