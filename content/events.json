@@ -62,6 +62,7 @@
   {
     "title": "[Fashion collective]",
     "date": "2027-02-13",
+    "end_date": "2026-11-27",
     "time": "[7pm–10pm]",
     "where": "The House",
     "cost": "[$XX]",
@@ -69,6 +70,7 @@
     "description": "[An evening showcase of emerging Melbourne designers, shot live in the studio.]",
     "photo": "/images/uploads/placeholders/pexels-13952442.jpg",
     "photo_description": "fashion collective",
-    "show": "Yes"
+    "photo_focus": "Centre",
+    "show": "No"
   }
 ]
