@@ -7,7 +7,7 @@
     "link": "https://www.instagram.com/PHOTOGRAPHER_HANDLE/",
     "photo": "/images/uploads/placeholders/pexels-17291685.jpg",
     "photo_description": "model in a black dress",
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Project title]",
@@ -17,7 +17,7 @@
     "link": "https://www.instagram.com/PHOTOGRAPHER_HANDLE/",
     "photo": "/images/uploads/placeholders/pexels-30878185.jpg",
     "photo_description": "moody portrait of a man in a dark suit",
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Project title]",
@@ -27,7 +27,7 @@
     "link": "https://www.instagram.com/PHOTOGRAPHER_HANDLE/",
     "photo": "/images/uploads/placeholders/pexels-11705153.jpg",
     "photo_description": "perfume bottle product shot",
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Project title]",
@@ -37,7 +37,7 @@
     "link": "https://www.instagram.com/PHOTOGRAPHER_HANDLE/",
     "photo": "/images/uploads/placeholders/pexels-4545079.jpg",
     "photo_description": "bride sitting by a window",
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Project title]",
@@ -47,7 +47,7 @@
     "link": "https://www.instagram.com/PHOTOGRAPHER_HANDLE/",
     "photo": "/images/uploads/placeholders/pexels-13022170.jpg",
     "photo_description": "beauty portrait",
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Project title]",
@@ -57,7 +57,7 @@
     "link": "https://www.instagram.com/PHOTOGRAPHER_HANDLE/",
     "photo": "/images/uploads/placeholders/pexels-12497340.jpg",
     "photo_description": "woman looking out from under a hat",
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Project title]",
@@ -67,7 +67,7 @@
     "link": "https://www.instagram.com/PHOTOGRAPHER_HANDLE/",
     "photo": "/images/uploads/placeholders/pexels-31219319.jpg",
     "photo_description": "portrait with a red curtain",
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Project title]",
@@ -77,7 +77,7 @@
     "link": "https://www.instagram.com/PHOTOGRAPHER_HANDLE/",
     "photo": "/images/uploads/placeholders/pexels-17014176.jpg",
     "photo_description": "woman in a red dress on a chair",
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Project title]",
@@ -87,6 +87,6 @@
     "link": "https://www.instagram.com/PHOTOGRAPHER_HANDLE/",
     "photo": "/images/uploads/placeholders/pexels-1358841.jpg",
     "photo_description": "bride in a veil",
-    "show": true
+    "show": "Yes"
   }
 ]

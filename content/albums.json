@@ -10,7 +10,7 @@
       "/images/uploads/placeholders/pexels-28059309.jpg",
       "/images/uploads/placeholders/pexels-3171837.jpg"
     ],
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Portrait masterclass]",
@@ -23,7 +23,7 @@
       "/images/uploads/placeholders/pexels-15935628.jpg",
       "/images/uploads/placeholders/pexels-30697991.jpg"
     ],
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Exhibition opening night]",
@@ -36,6 +36,6 @@
       "/images/uploads/placeholders/pexels-3171770.jpg",
       "/images/uploads/placeholders/pexels-6405781.jpg"
     ],
-    "show": true
+    "show": "Yes"
   }
 ]

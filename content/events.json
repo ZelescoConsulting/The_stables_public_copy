@@ -9,7 +9,7 @@
     "description": "[A day of booked portrait sessions with a guest photographer, in the House.]",
     "photo": "/images/uploads/placeholders/pexels-3973940.jpg",
     "photo_description": "portrait shoot day",
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Open studio day]",
@@ -21,7 +21,7 @@
     "description": "[Wander through all three spaces, meet the team and ask about hiring the studio.]",
     "photo": "/images/uploads/placeholders/pexels-15935628.jpg",
     "photo_description": "open studio day",
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Lighting workshop]",
@@ -33,7 +33,7 @@
     "description": "[A hands-on workshop on working with natural and studio light.]",
     "photo": "/images/uploads/placeholders/pexels-30697991.jpg",
     "photo_description": "lighting workshop",
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Editorial masterclass]",
@@ -45,7 +45,7 @@
     "description": "[Plan, style and shoot an editorial story with a working photographer.]",
     "photo": "/images/uploads/placeholders/pexels-12562547.jpg",
     "photo_description": "editorial masterclass",
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Model test shoots]",
@@ -57,7 +57,7 @@
     "description": "[Short test-shoot sessions for new models and photographers building their portfolios.]",
     "photo": "/images/uploads/placeholders/pexels-11388583.jpg",
     "photo_description": "model test shoots",
-    "show": true
+    "show": "Yes"
   },
   {
     "title": "[Fashion collective]",
@@ -69,6 +69,6 @@
     "description": "[An evening showcase of emerging Melbourne designers, shot live in the studio.]",
     "photo": "/images/uploads/placeholders/pexels-13952442.jpg",
     "photo_description": "fashion collective",
-    "show": true
+    "show": "Yes"
   }
 ]

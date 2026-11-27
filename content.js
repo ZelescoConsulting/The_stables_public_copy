@@ -94,8 +94,14 @@ function shortDate(text) {
   }).replace(",", "");
 }
 
+function isShown(item) {
+  if (!item) return false;
+  if (item.show === false) return false;
+  return String(item.show == null ? "" : item.show).trim().toLowerCase() !== "no";
+}
+
 function shown(list) {
-  return (list || []).filter(function (item) { return item && item.show !== false; });
+  return (list || []).filter(isShown);
 }
 
 function upcoming(events) {
