@@ -4,12 +4,13 @@
     "categories": [
       "Fashion"
     ],
+    "date": "2026-11-27",
     "space": "[Space used]",
     "photographer": "[Photographer name]",
     "link": "https://www.instagram.com/PHOTOGRAPHER_HANDLE/",
     "photo": "/images/uploads/placeholders/pexels-17291685.jpg",
     "photo_description": "model in a black dress",
-    "show": "Yes"
+    "show": "No"
   },
   {
     "title": "[Project title]",
