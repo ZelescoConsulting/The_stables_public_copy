@@ -50,6 +50,7 @@
   {
     "title": "[Model test shoots]",
     "date": "2027-01-30",
+    "end_date": "2026-11-27",
     "time": "[Sessions from 10am]",
     "where": "The Garden",
     "cost": "[$XX]",
@@ -57,7 +58,8 @@
     "description": "[Short test-shoot sessions for new models and photographers building their portfolios.]",
     "photo": "/images/uploads/placeholders/pexels-11388583.jpg",
     "photo_description": "model test shoots",
-    "show": "Yes"
+    "photo_focus": "Centre",
+    "show": "No"
   },
   {
     "title": "[Fashion collective]",
