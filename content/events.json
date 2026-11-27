@@ -7,7 +7,7 @@
     "cost": "[$XX]",
     "host": "[Photographer]",
     "description": "[A day of booked portrait sessions with a guest photographer, in the House.]",
-    "photo": "https://images.pexels.com/photos/3973940/pexels-photo-3973940.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "photo": "/images/uploads/placeholders/pexels-3973940.jpg",
     "photo_description": "portrait shoot day",
     "show": true
   },
@@ -19,7 +19,7 @@
     "cost": "Free",
     "host": "Free entry",
     "description": "[Wander through all three spaces, meet the team and ask about hiring the studio.]",
-    "photo": "https://images.pexels.com/photos/15935628/pexels-photo-15935628.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "photo": "/images/uploads/placeholders/pexels-15935628.jpg",
     "photo_description": "open studio day",
     "show": true
   },
@@ -31,7 +31,7 @@
     "cost": "[$XX]",
     "host": "[Host]",
     "description": "[A hands-on workshop on working with natural and studio light.]",
-    "photo": "https://images.pexels.com/photos/30697991/pexels-photo-30697991.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "photo": "/images/uploads/placeholders/pexels-30697991.jpg",
     "photo_description": "lighting workshop",
     "show": true
   },
@@ -43,7 +43,7 @@
     "cost": "[$XX]",
     "host": "[Photographer]",
     "description": "[Plan, style and shoot an editorial story with a working photographer.]",
-    "photo": "https://images.pexels.com/photos/12562547/pexels-photo-12562547.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "photo": "/images/uploads/placeholders/pexels-12562547.jpg",
     "photo_description": "editorial masterclass",
     "show": true
   },
@@ -55,7 +55,7 @@
     "cost": "[$XX]",
     "host": "Bookings open",
     "description": "[Short test-shoot sessions for new models and photographers building their portfolios.]",
-    "photo": "https://images.pexels.com/photos/11388583/pexels-photo-11388583.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "photo": "/images/uploads/placeholders/pexels-11388583.jpg",
     "photo_description": "model test shoots",
     "show": true
   },
@@ -67,7 +67,7 @@
     "cost": "[$XX]",
     "host": "[Host]",
     "description": "[An evening showcase of emerging Melbourne designers, shot live in the studio.]",
-    "photo": "https://images.pexels.com/photos/13952442/pexels-photo-13952442.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "photo": "/images/uploads/placeholders/pexels-13952442.jpg",
     "photo_description": "fashion collective",
     "show": true
   }
