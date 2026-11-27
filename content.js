@@ -208,8 +208,24 @@ function fillSite(site) {
       el.setAttribute("aria-label", site.name + ", home");
     });
   }
+
   const art = document.querySelector(".cx-horse");
-  if (art && site.contact_art) setPhoto(art, site.contact_art, 900);
+  if (art && site.contact_art) {
+    const isPhoto = String(site.contact_art_style || "").toLowerCase() === "photo";
+    setPhoto(art, site.contact_art, 1000);
+    art.classList.toggle("is-photo", isPhoto);
+
+    if (isPhoto && !art.parentElement.classList.contains("cx-photo-frame")) {
+      const frame = document.createElement("span");
+      frame.className = "cx-photo-frame";
+      art.parentElement.insertBefore(frame, art);
+      frame.appendChild(art);
+    }
+    if (isPhoto && site.contact_art_description) {
+      art.alt = site.contact_art_description;
+      art.removeAttribute("aria-hidden");
+    }
+  }
 }
 
 const CREST_MAX_WIDTH = 900;
@@ -595,17 +611,35 @@ function fillAlbums(albums) {
   }
 }
 
+const GALLERY_FILTERS_SHOWN = 6;
+
+function categorySlug(name) {
+  return String(name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "other";
+}
+
 function fillGallery(projects) {
   const grid = document.querySelector(".project-grid");
   if (!grid || !projects) return;
 
-  const labels = { portrait: "Portrait", fashion: "Fashion", product: "Product", bridal: "Bridal" };
+  const oldNames = { portrait: "Portrait", fashion: "Fashion", product: "Product", bridal: "Bridal" };
+  function categoriesOf(p) {
+    if (Array.isArray(p.categories) && p.categories.length) return p.categories.filter(Boolean).map(String);
+    if (p.category) return [oldNames[p.category] || String(p.category)];
+    return [];
+  }
 
-  const withPhotos = shown(projects).filter(function (p) {
+  const list = shown(projects).filter(function (p) {
     return p.photo || [].concat(p.photos || []).filter(Boolean).length;
-  });
-  grid.innerHTML = withPhotos.map(function (p, i) {
-    const eyebrow = [labels[p.category] || "", p.space].filter(Boolean).map(esc).join(" &middot; ");
+  }).map(function (p, i) { return { p: p, i: i }; })
+    .sort(function (x, y) {
+      const dx = x.p.date ? readDate(x.p.date).getTime() : -Infinity;
+      const dy = y.p.date ? readDate(y.p.date).getTime() : -Infinity;
+      return dy - dx || x.i - y.i;
+    }).map(function (x) { return x.p; });
+
+  grid.innerHTML = list.map(function (p, i) {
+    const cats = categoriesOf(p);
+    const eyebrow = cats.concat(p.space ? [p.space] : []).map(esc).join(" &middot; ");
 
     const extras = [].concat(p.photos || []).filter(Boolean);
     const all = extras.length ? [p.photo].concat(extras).filter(Boolean) : [];
@@ -625,7 +659,8 @@ function fillGallery(projects) {
       : '<div class="project-media">' + imgTag(p.photo || extras[0], 900, p.photo_description) + "</div>";
 
     return (
-      '<article class="project reveal' + (all.length ? " album" : "") + '" data-category="' + esc(p.category) + '"' + delay(i) + ">" +
+      '<article class="project reveal' + (all.length ? " album" : "") + '"' +
+        ' data-categories="' + esc(cats.map(categorySlug).join(" ")) + '"' + delay(i) + ">" +
         picture +
         (eyebrow ? '<p class="eyebrow eyebrow-dark">' + eyebrow + "</p>" : "") +
         "<h3>" + esc(p.title) + "</h3>" +
@@ -635,6 +670,49 @@ function fillGallery(projects) {
       "</article>"
     );
   }).join("");
+
+  const filters = document.querySelector(".gallery-filters");
+  if (filters) {
+    const counts = {};
+    list.forEach(function (p) {
+      categoriesOf(p).forEach(function (name) { counts[name] = (counts[name] || 0) + 1; });
+    });
+    const names = Object.keys(counts).sort(function (a, b) {
+      return counts[b] - counts[a] || a.localeCompare(b);
+    });
+    const button = function (name, slug, count, active) {
+      return '<button class="filter-button' + (active ? " is-active" : "") + '" type="button" data-filter="' + esc(slug) + '"' +
+        ' aria-pressed="' + (active ? "true" : "false") + '">' + esc(name) +
+        ' <span class="filter-count">' + count + "</span></button>";
+    };
+    const first = names.slice(0, GALLERY_FILTERS_SHOWN);
+    const rest = names.slice(GALLERY_FILTERS_SHOWN);
+    filters.innerHTML = button("All", "all", list.length, true) +
+      first.map(function (n) { return button(n, categorySlug(n), counts[n], false); }).join("") +
+      (rest.length
+        ? '<div class="filter-more">' +
+            '<button class="filter-button filter-more-toggle" type="button" aria-expanded="false" aria-controls="filter-more-list">' +
+              '<span class="filter-more-label">More</span> <span class="filter-more-arrow" aria-hidden="true">&#9662;</span>' +
+            "</button>" +
+            '<div class="filter-more-list" id="filter-more-list" hidden>' +
+              rest.map(function (n) { return button(n, categorySlug(n), counts[n], false); }).join("") +
+            "</div>" +
+          "</div>"
+        : "");
+  }
+
+  if (!grid.parentElement.querySelector(".gallery-more")) {
+    grid.insertAdjacentHTML("afterend",
+      '<div class="ev-show gallery-more" hidden>' +
+        '<span class="ev-show-line" aria-hidden="true"></span>' +
+        '<button type="button" class="ev-show-more gallery-more-button">' +
+          '<span class="ev-show-arrow" aria-hidden="true">' +
+            '<svg viewBox="0 0 120 16" focusable="false"><path d="M2 2 L60 14 L118 2" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>' +
+          "</span>" +
+          '<span class="ev-show-label">More work</span>' +
+        "</button>" +
+      "</div>");
+  }
 }
 
 function fillSpaces(spaces) {

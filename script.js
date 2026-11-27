@@ -492,27 +492,85 @@ if (carousel) {
   });
 }
 
-const filterButtons = document.querySelectorAll(".filter-button");
-const projects = document.querySelectorAll(".project");
+const GALLERY_PAGE = 12;
 
-filterButtons.forEach(function (button) {
-  button.addEventListener("click", function () {
-    const filter = button.dataset.filter;
+(function () {
+  const filters = document.querySelector(".gallery-filters");
+  const projects = Array.from(document.querySelectorAll(".project"));
+  if (!filters || projects.length === 0) return;
 
-    filterButtons.forEach(function (b) {
-      b.classList.remove("is-active");
-      b.setAttribute("aria-pressed", "false");
+  const moreBox = document.querySelector(".gallery-more");
+  const moreButton = moreBox && moreBox.querySelector(".gallery-more-button");
+  const moreToggle = filters.querySelector(".filter-more-toggle");
+  const moreList = filters.querySelector(".filter-more-list");
+  let filter = "all";
+  let showing = GALLERY_PAGE;
+
+  function categories(project) {
+
+    return (project.dataset.categories || project.dataset.category || "").split(" ").filter(Boolean);
+  }
+
+  function apply(arriving) {
+    const matching = projects.filter(function (project) {
+      return filter === "all" || categories(project).indexOf(filter) !== -1;
     });
-    button.classList.add("is-active");
-    button.setAttribute("aria-pressed", "true");
-
     projects.forEach(function (project) {
-      const matches = filter === "all" || project.dataset.category === filter;
-      project.classList.toggle("is-hidden", !matches);
+      const n = matching.indexOf(project);
+      const show = n !== -1 && n < showing;
+      if (show && arriving && project.classList.contains("is-hidden")) project.classList.add("is-arriving");
+      project.classList.toggle("is-hidden", !show);
       project.classList.add("is-revealed");
     });
+    window.setTimeout(function () {
+      projects.forEach(function (project) { project.classList.remove("is-arriving"); });
+    }, 700);
+    if (moreBox) moreBox.hidden = matching.length <= showing;
+  }
+
+  function setMoreList(open) {
+    if (!moreList) return;
+    moreList.hidden = !open;
+    moreToggle.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  filters.addEventListener("click", function (event) {
+    if (event.target.closest(".filter-more-toggle")) {
+      setMoreList(moreList.hidden);
+      return;
+    }
+    const button = event.target.closest(".filter-button[data-filter]");
+    if (!button) return;
+    filter = button.dataset.filter;
+    showing = GALLERY_PAGE;
+    filters.querySelectorAll(".filter-button[data-filter]").forEach(function (b) {
+      b.classList.toggle("is-active", b === button);
+      b.setAttribute("aria-pressed", b === button ? "true" : "false");
+    });
+
+    if (moreToggle) {
+      const fromMore = moreList.contains(button);
+      moreToggle.classList.toggle("is-active", fromMore);
+      moreToggle.querySelector(".filter-more-label").textContent =
+        fromMore ? button.childNodes[0].textContent.trim() : "More";
+      setMoreList(false);
+    }
+    apply(false);
   });
-});
+
+  document.addEventListener("click", function (event) {
+    if (moreList && !moreList.hidden && !event.target.closest(".filter-more")) setMoreList(false);
+  });
+
+  if (moreButton) {
+    moreButton.addEventListener("click", function () {
+      showing += GALLERY_PAGE;
+      apply(true);
+    });
+  }
+
+  apply(false);
+})();
 
 const lightbox = document.querySelector(".lightbox");
 

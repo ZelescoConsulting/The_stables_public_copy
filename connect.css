@@ -104,6 +104,35 @@
   height: auto;
 }
 
+.cx-photo-frame {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 30rem);
+  line-height: 0;
+}
+
+.cx-photo-frame .cx-horse.is-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.cx-photo-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(42, 41, 43, 0) 55%, rgba(42, 41, 43, 0.55) 100%);
+  box-shadow: inset 0 0 40px rgba(42, 41, 43, 0.5);
+}
+
+@media (max-width: 500px) {
+  .cx-photo-frame {
+    width: min(80%, 22rem);
+  }
+}
+
 .cx-more,
 .cx-close {
   display: inline-flex;
