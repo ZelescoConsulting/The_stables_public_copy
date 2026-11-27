@@ -1,7 +1,7 @@
 [
   {
     "title": "[Candlelit supper club]",
-    "when": "[Month, year]",
+    "date": "2026-10-17",
     "space": "The House",
     "cover": "/images/uploads/placeholders/pexels-4992827.jpg",
     "photos": [
@@ -14,7 +14,7 @@
   },
   {
     "title": "[Portrait masterclass]",
-    "when": "[Month, year]",
+    "date": "2026-09-12",
     "space": "The Stables",
     "cover": "/images/uploads/placeholders/pexels-3856035.jpg",
     "photos": [
@@ -27,7 +27,7 @@
   },
   {
     "title": "[Exhibition opening night]",
-    "when": "[Month, year]",
+    "date": "2026-08-22",
     "space": "The House",
     "cover": "/images/uploads/placeholders/pexels-2559741.jpg",
     "photos": [

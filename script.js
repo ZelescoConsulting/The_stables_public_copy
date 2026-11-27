@@ -1,5 +1,39 @@
 const prefersLessMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+(function () {
+  const ring = document.querySelector(".home .scroll-ring-text");
+  if (!ring) return;
+
+  const characters = Array.from(ring.textContent);
+  const letters = document.createDocumentFragment();
+  ring.style.setProperty("--char-count", characters.length);
+  characters.forEach(function (character, index) {
+    const letter = document.createElement("span");
+    letter.className = "scroll-ring-char";
+    letter.style.setProperty("--char-index", index);
+    letter.textContent = character;
+    letters.appendChild(letter);
+  });
+  ring.replaceChildren(letters);
+  ring.classList.add("is-ready");
+
+  const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let frame = null;
+  function update() {
+    frame = null;
+    ring.style.transform = motionPreference.matches
+      ? "none"
+      : "rotate(" + (Math.max(0, window.scrollY) * 0.12) + "deg)";
+  }
+  window.addEventListener("scroll", function () {
+    if (motionPreference.matches || frame !== null) return;
+    frame = window.requestAnimationFrame(update);
+  }, { passive: true });
+  motionPreference.addEventListener("change", update);
+  window.addEventListener("pageshow", update);
+  update();
+})();
+
 const header = document.querySelector(".site-header");
 const hero = document.querySelector(".hero");
 
@@ -132,6 +166,9 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitBrandNa
     const raw = Math.min(1, Math.max(0, window.scrollY / (window.innerHeight * MOVE_DISTANCE)));
     const p = raw * raw * (3 - 2 * raw);
     place(moveName, name.getBoundingClientRect(), toName.getBoundingClientRect(), p);
+
+    moveName.style.color = "color-mix(in srgb, " + getComputedStyle(toName).color +
+      " " + Math.round(p * 100) + "%, " + getComputedStyle(name).color + ")";
     body.classList.toggle("brand-arrived", raw >= 0.995);
   }
   function onScroll() {
@@ -387,8 +424,9 @@ if (nextEventSection) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  function readDate(item) {
-    const parts = item.dataset.date.split("-").map(Number);
+  function readDate(item, which) {
+    const text = (which === "end" && item.dataset.end) || item.dataset.date;
+    const parts = text.split("-").map(Number);
     return new Date(parts[0], parts[1] - 1, parts[2]);
   }
 
@@ -396,15 +434,22 @@ if (nextEventSection) {
 
   allEvents.forEach(function (item) {
     const label = item.querySelector(".featured-date");
-    if (label && item.dataset.date) {
-      label.textContent = readDate(item).toLocaleDateString("en-AU", {
-        weekday: "long", day: "numeric", month: "long", year: "numeric"
-      });
+    if (!label || !item.dataset.date) return;
+    const start = readDate(item), end = readDate(item, "end");
+    const full = { weekday: "long", day: "numeric", month: "long", year: "numeric" };
+    if (end <= start) {
+      label.textContent = start.toLocaleDateString("en-AU", full);
+      return;
     }
+    const sameMonth = start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear();
+    const first = sameMonth
+      ? start.toLocaleDateString("en-AU", { weekday: "long" }) + " " + start.getDate()
+      : start.toLocaleDateString("en-AU", { weekday: "long", day: "numeric", month: "long" });
+    label.textContent = first + " \u2013 " + end.toLocaleDateString("en-AU", full);
   });
 
   const upcomingEvents = allEvents
-    .filter(function (item) { return readDate(item) >= today; })
+    .filter(function (item) { return readDate(item, "end") >= today; })
     .sort(function (a, b) { return readDate(a) - readDate(b); });
 
   const counter = nextEventSection.querySelector(".event-counter");
@@ -491,12 +536,14 @@ if (lightbox) {
   }
 
   document.querySelectorAll(".album").forEach(function (album) {
-    album.querySelector(".album-open").addEventListener("click", function () {
-      albumPhotos = Array.from(album.querySelectorAll(".album-photos img"));
-      lightboxTitle.textContent = album.querySelector("h3").textContent;
-      showPhoto(0);
-      lightbox.showModal();
-      document.body.classList.add("lightbox-open");
+    album.querySelectorAll(".album-open").forEach(function (button) {
+      button.addEventListener("click", function () {
+        albumPhotos = Array.from(album.querySelectorAll(".album-photos img"));
+        lightboxTitle.textContent = album.querySelector("h3").textContent;
+        showPhoto(Number(button.dataset.start) || 0);
+        lightbox.showModal();
+        document.body.classList.add("lightbox-open");
+      });
     });
   });
 
@@ -520,14 +567,10 @@ if (lightbox) {
   });
 }
 
-function useBackupPhoto(img) {
-  if (img.dataset.backupUsed) return;
-  img.dataset.backupUsed = "true";
-  img.src = "https://picsum.photos/seed/" + encodeURIComponent(img.alt || "stables") + "/1200/1200";
-}
-
 document.querySelectorAll("img").forEach(function (img) {
-  if (img.complete && img.naturalWidth === 0 && img.getAttribute("src")) {
+  const src = img.getAttribute("src");
+  if (img.closest(".album-photos")) return;
+  if (src === "" || (src && img.complete && img.naturalWidth === 0)) {
     useBackupPhoto(img);
   }
   img.addEventListener("error", function () {

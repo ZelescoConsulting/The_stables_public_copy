@@ -37,8 +37,61 @@ function imgTag(src, width, alt, extra) {
     (extra || "") + ">";
 }
 
+const MISSING_COLOURS = { background: "#e8d3cc", ring: "#c9a26b", crest: "#a8834f" };
+let missingTile = null;
+
+function missingPhotoTile() {
+  if (missingTile) return missingTile;
+  missingTile = new Promise(function (resolve) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1200;
+    canvas.height = 900;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = MISSING_COLOURS.background;
+    ctx.fillRect(0, 0, 1200, 900);
+    ctx.strokeStyle = MISSING_COLOURS.ring;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(600, 450, 150, 0, Math.PI * 2);
+    ctx.stroke();
+    const finish = function () {
+      try { resolve(canvas.toDataURL("image/png")); } catch (e) { resolve(""); }
+    };
+
+    const crestVar = getComputedStyle(document.documentElement).getPropertyValue("--crest");
+    const match = crestVar.match(/url\(["']?([^"')]+)["']?\)/);
+    const crest = new Image();
+    crest.onload = function () {
+      const w = 230, h = w * crest.naturalHeight / crest.naturalWidth;
+      const tint = document.createElement("canvas");
+      tint.width = w;
+      tint.height = h;
+      const t = tint.getContext("2d");
+      t.drawImage(crest, 0, 0, w, h);
+      t.globalCompositeOperation = "source-in";
+      t.fillStyle = MISSING_COLOURS.crest;
+      t.fillRect(0, 0, w, h);
+      ctx.drawImage(tint, 600 - w / 2, 450 - h / 2);
+      finish();
+    };
+    crest.onerror = finish;
+    crest.src = match ? match[1] : "images/stables-logo.png";
+  });
+  return missingTile;
+}
+
+function useBackupPhoto(img) {
+  if (!img || img.dataset.backupUsed) return;
+  img.dataset.backupUsed = "true";
+  img.classList.add("photo-missing");
+  missingPhotoTile().then(function (url) { if (url) img.src = url; });
+}
+
 function setPhoto(img, src, width, alt) {
-  if (!img || !src) return;
+  if (!img) return;
+
+  if (src === "" || src === null) { useBackupPhoto(img); return; }
+  if (!src) return;
   img.dataset.original = /^https?:\/\//.test(src) ? src : src.replace(/^\/+/, "");
   img.src = photoUrl(src, width);
   if (alt !== undefined) img.alt = alt || "";
@@ -104,12 +157,30 @@ function shown(list) {
   return (list || []).filter(isShown);
 }
 
+function lastDay(e) {
+  if (e.end_date && !isNaN(readDate(e.end_date)) && readDate(e.end_date) > readDate(e.date)) {
+    return e.end_date;
+  }
+  return e.date;
+}
+
 function upcoming(events) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return shown(events)
-    .filter(function (e) { return e.date && readDate(e.date) >= today; })
+    .filter(function (e) { return e.photo && String(e.photo).trim(); })
+    .filter(function (e) { return e.date && readDate(lastDay(e)) >= today; })
     .sort(function (a, b) { return readDate(a.date) - readDate(b.date); });
+}
+
+function eventDates(e) {
+  const end = lastDay(e);
+  if (end === e.date) return shortDate(e.date);
+  const a = readDate(e.date), b = readDate(end);
+  const day = function (d) { return d.toLocaleDateString("en-AU", { weekday: "short" }).replace(",", "") + " " + d.getDate(); };
+  return a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear()
+    ? day(a) + " \u2013 " + shortDate(end)
+    : shortDate(e.date) + " \u2013 " + shortDate(end);
 }
 
 function delay(i) {
@@ -268,7 +339,8 @@ function fillHomeEvents(events) {
   box.innerHTML = upcoming(events).map(function (e, i) {
     const facts = [e.time, e.where, e.cost].filter(Boolean).map(esc).join(" &middot; ");
     return (
-      '<article class="featured-event' + (i === 0 ? " is-current" : "") + '" data-date="' + esc(e.date) + '">' +
+      '<article class="featured-event' + (i === 0 ? " is-current" : "") + '" data-date="' + esc(e.date) + '"' +
+        (lastDay(e) !== e.date ? ' data-end="' + esc(lastDay(e)) + '"' : "") + ">" +
         imgTag(e.photo, 1200, e.photo_description) +
         "<div>" +
           '<span class="featured-date">' + esc(e.date) + "</span>" +
@@ -330,6 +402,7 @@ function fillEventList(events) {
     const id = slug(e.title);
     const title = esc(e.title);
     const date = eventShortDate(e.date);
+    const dates = eventDates(e);
     const focus = PHOTO_FOCUS[String(e.photo_focus || "").toLowerCase()] || "50%";
 
     return (
@@ -347,7 +420,8 @@ function fillEventList(events) {
           "</button>" +
           '<div class="ev-caption">' +
             "<h3>" + title + "</h3>" +
-            '<p class="ev-date">' + esc(date) + "</p>" +
+
+            '<p class="ev-date visually-hidden">' + esc(date) + "</p>" +
           "</div>" +
         "</div>" +
 
@@ -359,7 +433,7 @@ function fillEventList(events) {
             "</div>" +
             (e.description ? '<p class="ev-about">' + esc(e.description) + "</p>" : "") +
             '<ul class="ev-facts">' +
-              "<li><strong>When</strong> " + esc(date) + (e.time ? " &middot; " + esc(e.time) : "") + "</li>" +
+              "<li><strong>When</strong> " + esc(dates) + (e.time ? " &middot; " + esc(e.time) : "") + "</li>" +
               (e.where ? "<li><strong>Where</strong> " + esc(e.where) + "</li>" : "") +
               (e.host ? "<li><strong>Host</strong> " + esc(e.host) + "</li>" : "") +
               (e.cost ? "<li><strong>Cost</strong> " + esc(e.cost) + "</li>" : "") +
@@ -374,32 +448,91 @@ function fillEventList(events) {
   let html = "";
   for (let i = 0; i < items.length; i += 3) {
     const row = items.slice(i, i + 3);
-    html += '<div class="ev-row">' + row.map(card).join("");
-    for (let n = row.length; n < 3; n++) html += '<div class="ev-spacer" aria-hidden="true"></div>';
-    html += "</div>";
+    const n = i / 3;
+    html += '<div class="ev-row' + (n > 0 ? " is-later" : "") + '"' +
+      (n > 0 ? ' data-batch="' + Math.ceil(n / 2) + '"' : "") + ">" +
+      row.map(card).join("") + "</div>";
+  }
+  if (items.length > 3) {
+    html += '<div class="ev-show">' +
+      '<span class="ev-show-line" aria-hidden="true"></span>' +
+      '<button type="button" class="ev-show-more" aria-expanded="false">' +
+        '<span class="ev-show-arrow" aria-hidden="true">' +
+          '<svg viewBox="0 0 120 16" focusable="false"><path d="M2 2 L60 14 L118 2" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>' +
+        "</span>" +
+        '<span class="ev-show-label">More events</span>' +
+      "</button>" +
+      '<button type="button" class="ev-show-all">Show all ' + items.length + "</button>" +
+    "</div>";
   }
   list.innerHTML = html;
+}
+
+function albumDate(a) {
+  if (a.when) return a.when;
+  if (!a.date) return "";
+  const start = readDate(a.date);
+  if (isNaN(start)) return "";
+  const full = { day: "numeric", month: "long", year: "numeric" };
+  const end = a.end_date ? readDate(a.end_date) : null;
+  if (!end || isNaN(end) || end <= start) return start.toLocaleDateString("en-AU", full);
+  if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
+    return start.getDate() + " \u2013 " + end.toLocaleDateString("en-AU", full);
+  }
+  return start.toLocaleDateString("en-AU", { day: "numeric", month: "long" }) + " \u2013 " +
+    end.toLocaleDateString("en-AU", full);
 }
 
 function fillAlbums(albums) {
   const grid = document.querySelector(".album-grid");
   if (!grid || !albums) return;
 
-  grid.innerHTML = shown(albums).map(function (a, i) {
+  const list = shown(albums).filter(function (a) {
+    return a.cover || [].concat(a.photos || []).filter(Boolean).length;
+  }).map(function (a, i) { return { a: a, i: i }; })
+
+    .sort(function (x, y) {
+      const dx = x.a.date ? readDate(x.a.date).getTime() : -Infinity;
+      const dy = y.a.date ? readDate(y.a.date).getTime() : -Infinity;
+      return dy - dx || x.i - y.i;
+    }).map(function (x) { return x.a; });
+
+  if (list.length === 0) {
+    grid.innerHTML = '<p class="content-empty">Photos from our events will appear here.</p>';
+    return;
+  }
+
+  grid.classList.add("album-carousel");
+  grid.innerHTML = list.map(function (a, i) {
 
     const photos = [].concat(a.photos || []).filter(Boolean);
     const cover = a.cover || photos[0];
-    const meta = [a.when, a.space].filter(Boolean).map(esc).join(" &middot; ");
+    const meta = [albumDate(a), a.space].filter(Boolean).map(esc).join(" &middot; ");
+    const count = photos.length + (photos.length === 1 ? " photo" : " photos");
+
+    const strip = photos.slice(0, 4).map(function (p, n) {
+      const more = n === 3 && photos.length > 4 ? '<span class="album-strip-more">+ ' + (photos.length - 4) + "</span>" : "";
+      return '<button class="album-open album-thumb" type="button" data-start="' + n + '"' +
+        ' aria-label="' + esc(a.title + ": open photo " + (n + 1)) + '">' +
+        imgTag(p, 400, "") + more + "</button>";
+    }).join("");
     return (
-      '<article class="album reveal"' + delay(i) + ">" +
-        '<button class="album-open" type="button">' +
-          '<span class="album-cover">' +
-            imgTag(cover, 900, a.title) +
-            '<span class="album-count">' + photos.length + (photos.length === 1 ? " photo" : " photos") + "</span>" +
-          "</span>" +
+      '<article class="album' + (i === 0 ? " is-current" : "") + '" data-index="' + i + '">' +
+        '<div class="album-feature">' +
+          '<button class="album-open album-cover-button" type="button" aria-label="' + esc("Open the album: " + a.title) + '">' +
+            '<span class="album-cover">' +
+              imgTag(cover, 1400, a.title) +
+              '<span class="album-count">' + count + "</span>" +
+            "</span>" +
+          "</button>" +
+          (strip ? '<div class="album-strip">' + strip + "</div>" : "") +
+        "</div>" +
+        '<div class="album-text">' +
+          (meta ? '<p class="album-when">' + meta + "</p>" : "") +
           "<h3>" + esc(a.title) + "</h3>" +
-          (meta ? '<span class="event-meta">' + meta + "</span>" : "") +
-        "</button>" +
+          (a.description ? '<p class="album-about">' + esc(a.description) + "</p>" : "") +
+          '<button class="album-open album-view" type="button">View the album &rarr;</button>' +
+        "</div>" +
         '<div class="album-photos" hidden>' +
           photos.map(function (p, n) {
             return '<img data-src="' + esc(photoUrl(p, 1600)) + '" alt="' + esc(a.title + ", photo " + (n + 1)) + '">';
@@ -408,6 +541,58 @@ function fillAlbums(albums) {
       "</article>"
     );
   }).join("");
+
+  const head = document.querySelector(".past-events .section-head");
+  if (head && list.length > 1 && !head.querySelector(".album-switcher")) {
+    head.insertAdjacentHTML("beforeend",
+      '<div class="event-switcher album-switcher">' +
+        '<button class="event-switch album-prev" type="button" aria-label="Previous album">&larr;</button>' +
+        '<span class="event-counter album-counter">1 / ' + list.length + "</span>" +
+        '<button class="event-switch album-next" type="button" aria-label="Next album">&rarr;</button>' +
+      "</div>");
+  }
+
+  if (list.length > 1) {
+    const years = [];
+    list.forEach(function (a, i) {
+      const d = a.date ? readDate(a.date) : null;
+      const year = d && !isNaN(d) ? String(d.getFullYear()) : "Earlier";
+      let group = years[years.length - 1];
+      if (!group || group.year !== year) { group = { year: year, items: [] }; years.push(group); }
+      group.items.push({ a: a, i: i, d: d });
+    });
+    const index = years.map(function (group) {
+      const busy = group.items.length > 4;
+      let lastMonth = "";
+      return '<section class="album-year">' +
+        '<h3 class="album-year-title">' + esc(group.year) + "</h3>" +
+        '<div class="album-year-grid">' +
+          group.items.map(function (x) {
+            const photos = [].concat(x.a.photos || []).filter(Boolean);
+            const month = x.d && !isNaN(x.d) ? x.d.toLocaleDateString("en-AU", { month: "long" }) : "";
+
+            const first = month && month !== lastMonth;
+            const label = busy ? '<span class="album-month' + (first ? "" : " is-repeat") + '">' + esc(month || " ") + "</span>" : "";
+            if (month) lastMonth = month;
+            const when = x.a.date ? readDate(x.a.date).toLocaleDateString("en-AU", { day: "numeric", month: "short" }) : (x.a.when || "");
+            return '<button class="album-tile" type="button" data-index="' + x.i + '">' +
+                label +
+                imgTag(x.a.cover || photos[0], 500, "") +
+                '<span class="album-tile-name">' + esc(x.a.title) + "</span>" +
+                '<span class="album-tile-when">' + esc(when) + "</span>" +
+              "</button>";
+          }).join("") +
+        "</div>" +
+      "</section>";
+    }).join("");
+    grid.insertAdjacentHTML("afterend",
+      '<div class="album-all">' +
+        '<button class="album-all-toggle" type="button" aria-expanded="false" aria-controls="album-index">' +
+          'See all past events <span class="album-all-count">(' + list.length + ")</span>" +
+        "</button>" +
+        '<div class="album-index" id="album-index" hidden>' + index + "</div>" +
+      "</div>");
+  }
 }
 
 function fillGallery(projects) {
@@ -416,7 +601,10 @@ function fillGallery(projects) {
 
   const labels = { portrait: "Portrait", fashion: "Fashion", product: "Product", bridal: "Bridal" };
 
-  grid.innerHTML = shown(projects).map(function (p, i) {
+  const withPhotos = shown(projects).filter(function (p) {
+    return p.photo || [].concat(p.photos || []).filter(Boolean).length;
+  });
+  grid.innerHTML = withPhotos.map(function (p, i) {
     const eyebrow = [labels[p.category] || "", p.space].filter(Boolean).map(esc).join(" &middot; ");
 
     const extras = [].concat(p.photos || []).filter(Boolean);
@@ -425,7 +613,7 @@ function fillGallery(projects) {
     const picture = all.length
       ? '<button class="album-open project-open" type="button" aria-label="See all ' + all.length + ' photos">' +
           '<span class="project-media">' +
-            imgTag(p.photo, 900, p.photo_description) +
+            imgTag(p.photo || extras[0], 900, p.photo_description) +
             '<span class="album-count">' + all.length + " photos</span>" +
           "</span>" +
         "</button>" +
@@ -434,7 +622,7 @@ function fillGallery(projects) {
             return '<img data-src="' + esc(photoUrl(src, 1600)) + '" alt="' + esc(p.title + ", photo " + (n + 1)) + '">';
           }).join("") +
         "</div>"
-      : '<div class="project-media">' + imgTag(p.photo, 900, p.photo_description) + "</div>";
+      : '<div class="project-media">' + imgTag(p.photo || extras[0], 900, p.photo_description) + "</div>";
 
     return (
       '<article class="project reveal' + (all.length ? " album" : "") + '" data-category="' + esc(p.category) + '"' + delay(i) + ">" +
