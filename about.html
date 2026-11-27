@@ -54,18 +54,19 @@
 
     <section class="page-hero">
       <p class="eyebrow">About The Stables</p>
-      <h1>A place to create, capture and be inspired.</h1>
-      <p class="page-hero-intro">A boutique photography studio in Deepdene, Melbourne.</p>
+      <h1 data-about="intro.heading">A place to create, capture and be inspired.</h1>
+      <p class="page-hero-intro" data-about="intro.line">A boutique photography studio in Deepdene, Melbourne.</p>
     </section>
 
-    <section class="story">
+    <section class="story" data-about-part="story">
       <div class="story-media reveal">
-        <img src="https://images.pexels.com/photos/109963/pexels-photo-109963.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Placeholder: old timber window">
+        <img data-about-photo src="https://images.pexels.com/photos/109963/pexels-photo-109963.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Placeholder: old timber window">
       </div>
 
       <div class="story-text reveal" style="--delay: 0.15s">
         <p class="eyebrow eyebrow-dark">Our story</p>
-        <h2>Style with substance.</h2>
+        <h2 data-about="story.heading">Style with substance.</h2>
+        <div data-about-text="story.text">
         <p>
           The Stables of Melbourne was founded by author and consultant Lucia Zelesco.
           Lucia believes in blending style with substance, and created The Stables as a
@@ -76,14 +77,15 @@
           passion for inclusion, empowerment and expression, we welcome all
           nationalities, genders and diversities.
         </p>
+        </div>
       </div>
     </section>
 
-    <section class="studio-video" id="in-the-media">
+    <section class="studio-video" id="in-the-media" data-about-part="media">
       <p class="eyebrow eyebrow-dark reveal">As featured in</p>
 
       <div class="video-frame reveal">
-        <iframe
+        <iframe data-about-video
           src="https://drive.google.com/file/d/1oc6a9C3x65oE_Avf0P-_huoMqsJk-aY4/preview"
           title="Going for broke Featuring The Stables of Melbourne"
           loading="lazy"
@@ -91,10 +93,10 @@
           referrerpolicy="strict-origin-when-cross-origin"
           allowfullscreen></iframe>
       </div>
-      <p class="video-credit reveal"> Clip from <em>Shaun Micallef's Going For Broke</em>, episode 2. &copy; ABC / CJZ. Shared with permission.
+      <p class="video-credit reveal" data-about-credit> Clip from <em>Shaun Micallef's Going For Broke</em>, episode 2. &copy; ABC / CJZ. Shared with permission.
       </p>
 
-<a href="https://iview.abc.net.au/video/DO2550H002S00?utm_content=link&utm_medium=content_shared"
+<a data-about-full href="https://iview.abc.net.au/video/DO2550H002S00?utm_content=link&utm_medium=content_shared"
    class="button button-dark"
    target="_blank" rel="noopener">
   Watch the full episode on ABC iview &rarr;
@@ -103,18 +105,18 @@
 
     <section class="founder-quote">
       <blockquote class="reveal">
-        <p>&ldquo;Shine bright always. The world needs your light.&rdquo;</p>
-        <cite>&mdash; Lucia Zelesco, Founder</cite>
+        <p data-about-quote>&ldquo;Shine bright always. The world needs your light.&rdquo;</p>
+        <cite data-about-quote-credit>&mdash; Lucia Zelesco, Founder</cite>
       </blockquote>
     </section>
 
     <section class="mission">
       <p class="eyebrow eyebrow-dark reveal">Our mission</p>
-      <p class="mission-statement reveal">
+      <p class="mission-statement reveal" data-about="mission.statement">
         To give every person a place to be heard, to shine, and to connect.
       </p>
 
-      <ul class="values">
+      <ul class="values" data-about-values>
         <li class="reveal"><span class="value-number">01</span><span class="value-name">Courage</span></li>
         <li class="reveal" style="--delay: 0.1s"><span class="value-number">02</span><span class="value-name">Creativity</span></li>
         <li class="reveal" style="--delay: 0.2s"><span class="value-number">03</span><span class="value-name">Belonging</span></li>
@@ -122,14 +124,15 @@
       </ul>
     </section>
 
-    <section class="story story-reverse story-dark">
+    <section class="story story-reverse story-dark" data-about-part="property">
       <div class="story-media reveal">
-        <img src="https://images.pexels.com/photos/16550795/pexels-photo-16550795.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Placeholder: stained glass windows">
+        <img data-about-photo src="https://images.pexels.com/photos/16550795/pexels-photo-16550795.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Placeholder: stained glass windows">
       </div>
 
       <div class="story-text reveal" style="--delay: 0.15s">
         <p class="eyebrow eyebrow-dark">The property</p>
-        <h2>A house with history.</h2>
+        <h2 data-about="property.heading">A house with history.</h2>
+        <div data-about-text="property.text">
         <p>
           [The property's history: when the house and stables were built, who lived
           there, and how they became a studio.]
@@ -138,13 +141,14 @@
           Today the property offers three distinct spaces to hire: the House, the
           Stables and the Garden.
         </p>
+        </div>
         <a href="spaces" class="text-link">Explore the spaces &rarr;</a>
       </div>
     </section>
 
     <section class="page-cta">
-      <h2 class="reveal">Let's connect.</h2>
-      <p class="reveal">Have questions? Want to collaborate? Or just want to say hello? We'd love to hear from you.</p>
+      <h2 class="reveal" data-about="closing.heading">Let's connect.</h2>
+      <p class="reveal" data-about="closing.text">Have questions? Want to collaborate? Or just want to say hello? We'd love to hear from you.</p>
       <a href="connect#enquire" class="button button-light reveal">Get in touch &rarr;</a>
       &nbsp;
       <a href="connect#tour" class="button button-cream reveal">Book a tour &rarr;</a>

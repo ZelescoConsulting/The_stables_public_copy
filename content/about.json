@@ -1,0 +1,43 @@
+{
+  "intro": {
+    "heading": "A place to create, capture and be inspired.",
+    "line": "A boutique photography studio in Deepdene, Melbourne."
+  },
+  "story": {
+    "heading": "Style with substance.",
+    "text": "The Stables of Melbourne was founded by author and consultant Lucia Zelesco. Lucia believes in blending style with substance, and created The Stables as a space where photographers, brands and creatives can bring their ideas to life.\n\nThe Stables is more than a creative studio. It's a movement. Born from a passion for inclusion, empowerment and expression, we welcome all nationalities, genders and diversities.",
+    "photo": "https://images.pexels.com/photos/109963/pexels-photo-109963.jpeg?auto=compress&cs=tinysrgb&w=1000",
+    "photo_description": "old timber window"
+  },
+  "media": {
+    "show": "Yes",
+    "video": "https://drive.google.com/file/d/1oc6a9C3x65oE_Avf0P-_huoMqsJk-aY4/preview",
+    "video_title": "Going for broke Featuring The Stables of Melbourne",
+    "credit": "Clip from *Shaun Micallef's Going For Broke*, episode 2. © ABC / CJZ. Shared with permission.",
+    "full_link": "https://iview.abc.net.au/video/DO2550H002S00?utm_content=link&utm_medium=content_shared",
+    "full_link_label": "Watch the full episode on ABC iview"
+  },
+  "quote": {
+    "text": "Shine bright always. The world needs your light.",
+    "credit": "Lucia Zelesco, Founder"
+  },
+  "mission": {
+    "statement": "To give every person a place to be heard, to shine, and to connect.",
+    "values": [
+      "Courage",
+      "Creativity",
+      "Belonging",
+      "Respect"
+    ]
+  },
+  "property": {
+    "heading": "A house with history.",
+    "text": "[The property's history: when the house and stables were built, who lived there, and how they became a studio.]\n\nToday the property offers three distinct spaces to hire: the House, the Stables and the Garden.",
+    "photo": "https://images.pexels.com/photos/16550795/pexels-photo-16550795.jpeg?auto=compress&cs=tinysrgb&w=1000",
+    "photo_description": "stained glass windows"
+  },
+  "closing": {
+    "heading": "Let's connect.",
+    "text": "Have questions? Want to collaborate? Or just want to say hello? We'd love to hear from you."
+  }
+}

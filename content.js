@@ -327,6 +327,79 @@ function seeThroughCrest(img) {
   return out.toDataURL("image/png");
 }
 
+function richText(text) {
+  return esc(text).replace(/\*([^*]+)\*/g, "<em>$1</em>");
+}
+
+function paragraphs(text) {
+  return String(text || "").split(/\n\s*\n/).map(function (p) { return p.trim(); })
+    .filter(Boolean).map(function (p) { return "<p>" + richText(p).replace(/\n/g, "<br>") + "</p>"; }).join("");
+}
+
+function fillAbout(about) {
+  if (!about || !document.querySelector("[data-about], [data-about-part]")) return;
+  const get = function (path) {
+    return path.split(".").reduce(function (o, k) { return o && o[k]; }, about);
+  };
+
+  document.querySelectorAll("[data-about]").forEach(function (el) {
+    const value = get(el.dataset.about);
+    if (value) el.innerHTML = richText(value);
+  });
+
+  document.querySelectorAll("[data-about-text]").forEach(function (el) {
+    const value = get(el.dataset.aboutText);
+    if (value) el.innerHTML = paragraphs(value);
+  });
+
+  ["story", "property"].forEach(function (part) {
+    const img = document.querySelector('[data-about-part="' + part + '"] [data-about-photo]');
+    const p = about[part];
+    if (img && p && p.photo !== undefined) setPhoto(img, p.photo, 1000, p.photo_description || "");
+  });
+
+  const media = about.media || {};
+  const mediaBox = document.querySelector('[data-about-part="media"]');
+  if (mediaBox) {
+    if (String(media.show || "").toLowerCase() === "no") {
+      mediaBox.hidden = true;
+    } else {
+      const frame = mediaBox.querySelector("[data-about-video]");
+      const player = media.video ? videoPlayerFor(media.video) : null;
+
+      if (frame && player) frame.src = player.src.replace(/([?&])autoplay=1&?/, "$1").replace(/[?&]$/, "");
+      if (frame && media.video_title) frame.title = media.video_title;
+      const credit = mediaBox.querySelector("[data-about-credit]");
+      if (credit && media.credit) credit.innerHTML = richText(media.credit);
+      const full = mediaBox.querySelector("[data-about-full]");
+      if (full) {
+        if (media.full_link) {
+          full.href = media.full_link;
+          full.innerHTML = esc(media.full_link_label || "Watch the full episode") + " &rarr;";
+        } else {
+          full.hidden = true;
+        }
+      }
+    }
+  }
+
+  const quote = about.quote || {};
+  const q = document.querySelector("[data-about-quote]");
+  if (q && quote.text) q.innerHTML = "&ldquo;" + richText(quote.text) + "&rdquo;";
+  const c = document.querySelector("[data-about-quote-credit]");
+  if (c && quote.credit) c.innerHTML = "&mdash; " + esc(quote.credit);
+
+  const values = (about.mission && about.mission.values) || [];
+  const list = document.querySelector("[data-about-values]");
+  if (list && values.length) {
+    list.innerHTML = values.filter(Boolean).map(function (v, i) {
+      const n = (i + 1 < 10 ? "0" : "") + (i + 1);
+      return '<li class="reveal"' + (i % 4 ? ' style="--delay: ' + (i % 4) * 0.1 + 's"' : "") + ">" +
+        '<span class="value-number">' + n + '</span><span class="value-name">' + esc(v) + "</span></li>";
+    }).join("");
+  }
+}
+
 function fillHomePhotos(home) {
   if (!home) return;
 
@@ -829,6 +902,7 @@ function fillStories(stories) {
 
   const needs = {
     site: !!document.querySelector(".brand, .cx-horse"),
+    about: !!document.querySelector("[data-about-part]"),
     home: !!document.querySelector(".hero"),
     events: !!document.querySelector(".next-event, .event-list"),
     albums: !!document.querySelector(".album-grid"),
@@ -846,6 +920,7 @@ function fillStories(stories) {
 
     [
       function () { fillSite(data.site); },
+      function () { fillAbout(data.about); },
       function () { fillHomePhotos(data.home); },
       function () { fillHomeEvents(data.events); },
       function () { fillHomeSpaces(data.spaces); },
