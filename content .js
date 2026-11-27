@@ -298,6 +298,16 @@ function eventShortDate(text) {
 
 const PHOTO_FOCUS = { left: "25%", centre: "50%", center: "50%", right: "75%" };
 
+function dateBadge(text) {
+  const d = readDate(text);
+  if (isNaN(d)) return "";
+  const month = d.toLocaleDateString("en-AU", { month: "short" }).replace(".", "");
+  return '<span class="ev-badge" aria-hidden="true">' +
+    '<span class="ev-badge-month">' + esc(month) + "</span>" +
+    '<span class="ev-badge-day">' + d.getDate() + "</span>" +
+  "</span>";
+}
+
 function fillEventList(events) {
   const list = document.querySelector(".event-list");
   if (!list || !events) return;
@@ -327,6 +337,7 @@ function fillEventList(events) {
             '<span class="ev-veil" aria-hidden="true"></span>' +
             '<span class="ev-spine" aria-hidden="true">' + title + "</span>" +
             '<span class="ev-more" aria-hidden="true"><span class="ev-line"></span>See more</span>' +
+            dateBadge(e.date) +
           "</button>" +
           '<div class="ev-caption">' +
             "<h3>" + title + "</h3>" +

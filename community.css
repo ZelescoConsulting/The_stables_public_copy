@@ -1166,6 +1166,51 @@ html.menu-open .site-menu {
   transition: opacity 0.4s ease;
 }
 
+.ev-badge {
+  position: absolute;
+  left: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 4.6rem;
+  height: 4.6rem;
+  background-color: #faf7f2;
+  color: var(--color-ink);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  transition: opacity 0.3s ease;
+}
+
+.ev-badge-month {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.ev-badge-day {
+  font-family: var(--font-heading);
+  font-size: 2.6rem;
+  font-weight: 500;
+  line-height: 0.95;
+}
+
+@media (max-width: 500px) {
+  .ev-badge {
+    left: 1rem;
+    bottom: 1rem;
+    width: 3.9rem;
+    height: 3.9rem;
+  }
+
+  .ev-badge-day {
+    font-size: 2.2rem;
+  }
+}
+
 .ev-more {
   position: absolute;
   right: 1.25rem;
@@ -1309,6 +1354,7 @@ html.menu-open .site-menu {
 
 .ev-card.open .ev-caption,
 .ev-card.open .ev-more,
+.ev-card.open .ev-badge,
 .ev-card.open .ev-photo::after {
   opacity: 0;
 }
@@ -1350,6 +1396,7 @@ html.menu-open .site-menu {
 
 .ev-row.has-open .ev-card:not(.open) .ev-caption,
 .ev-row.has-open .ev-card:not(.open) .ev-more,
+.ev-row.has-open .ev-card:not(.open) .ev-badge,
 .ev-row.has-open .ev-card:not(.open) .ev-photo::after {
   opacity: 0;
 }
@@ -1843,6 +1890,7 @@ html.menu-open .site-menu {
 
   .ev-row.has-open .ev-card:not(.open) .ev-caption,
   .ev-row.has-open .ev-card:not(.open) .ev-more,
+  .ev-row.has-open .ev-card:not(.open) .ev-badge,
   .ev-row.has-open .ev-card:not(.open) .ev-photo::after {
     opacity: 1;
   }
