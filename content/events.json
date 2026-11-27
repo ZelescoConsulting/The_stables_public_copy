@@ -38,6 +38,7 @@
   {
     "title": "[Editorial masterclass]",
     "date": "2027-01-16",
+    "end_date": "2026-11-27",
     "time": "[9am–5pm]",
     "where": "The House",
     "cost": "[$XX]",
@@ -45,7 +46,8 @@
     "description": "[Plan, style and shoot an editorial story with a working photographer.]",
     "photo": "/images/uploads/placeholders/pexels-12562547.jpg",
     "photo_description": "editorial masterclass",
-    "show": "Yes"
+    "photo_focus": "Centre",
+    "show": "No"
   },
   {
     "title": "[Model test shoots]",
