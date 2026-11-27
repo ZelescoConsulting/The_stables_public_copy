@@ -732,6 +732,16 @@ html.menu-open .site-menu {
   border-top-color: var(--color-gold);
 }
 
+.story .story-media img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  max-height: 85vh;
+  margin: 0 auto;
+}
+
 .mission {
   padding: var(--section-space) var(--gutter);
   background-color: var(--color-cream-dark);
@@ -2252,6 +2262,81 @@ html.menu-open .site-menu {
 
 .policy p + ul {
   margin-top: -0.25rem;
+}
+
+.project-grid {
+  display: block;
+  columns: 3;
+  column-gap: 1.5rem;
+}
+
+.project {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 2.5rem;
+  break-inside: avoid;
+}
+
+.project-media img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  max-height: 85vh;
+  margin: 0 auto;
+}
+
+.featured-event img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  max-height: 80vh;
+  margin: 0 auto;
+}
+
+.album-carousel .album-cover img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  max-height: 75vh;
+  margin: 0 auto;
+}
+
+.highlight-media,
+.story-card-media {
+  aspect-ratio: auto;
+  background-color: transparent;
+}
+
+.highlight-media img,
+.story-card-media img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 85vh;
+  margin: 0 auto;
+}
+
+.story-grid {
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .project-grid {
+    columns: 2;
+  }
+}
+
+@media (max-width: 500px) {
+  .project-grid {
+    columns: 1;
+  }
 }
 
 @media (max-width: 900px) {
