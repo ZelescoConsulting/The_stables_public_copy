@@ -212,14 +212,12 @@ function fillSite(site) {
   const art = document.querySelector(".cx-horse");
   if (art && site.contact_art) {
     const isPhoto = String(site.contact_art_style || "").toLowerCase() === "photo";
-    setPhoto(art, site.contact_art, 1000);
+    setPhoto(art, site.contact_art, 1800);
     art.classList.toggle("is-photo", isPhoto);
-
-    if (isPhoto && !art.parentElement.classList.contains("cx-photo-frame")) {
-      const frame = document.createElement("span");
-      frame.className = "cx-photo-frame";
-      art.parentElement.insertBefore(frame, art);
-      frame.appendChild(art);
+    const hero = art.closest(".cx-hero");
+    if (isPhoto && hero) {
+      hero.classList.add("has-photo");
+      hero.insertBefore(art, hero.firstChild);
     }
     if (isPhoto && site.contact_art_description) {
       art.alt = site.contact_art_description;
